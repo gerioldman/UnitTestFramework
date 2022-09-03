@@ -6,10 +6,6 @@ RMDIR   := rm -rf
 CC      := mingw32-gcc
 BIN     := ./bin
 OBJ     := ./obj
-#INCLUDE := ./include
-#SRC     := ./src
-#SRCS    := $(wildcard $(SRC)/*.c)
-#OBJS    := $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SRCS))
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS)
 EXE     := $(BIN)/main.exe
 CFLAGS  := -g -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE)
@@ -20,18 +16,22 @@ LDLIBS  := -lm
 all: $(EXE)
 
 $(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) | $(BIN)
+	echo Linking $@
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 $(UNITTESTRUNNEROBJS): $(OBJ)/%.o: $(UNITTESTRUNNERSRC)/%.c | $(OBJ)
+	echo Compiling $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(UNITTESTOBJS): $(OBJ)/%.o: $(UNITTESTSRC)/%.c | $(OBJ)
+	echo Compiling $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN) $(OBJ):
 	$(MKDIR) $@
 
 run: $(EXE)
+	echo "Running $<"
 	$<
 
 clean:

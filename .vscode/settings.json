@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "c:\\Users\\kgerg\\Desktop\\Egyetem\\7.felev\\UnitTestFramework\\bin",
+            "binaryPath": "c:\\Users\\kgerg\\Desktop\\Egyetem\\7.felev\\UnitTestFramework\\bin\\main.exe",
+            "binaryArgs": []
+        }
+    ]
+}
