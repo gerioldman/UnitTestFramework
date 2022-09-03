@@ -11,5 +11,8 @@
 
 #ifndef UNITTESTFRAMEWORK_H
 #define UNITTESTFRAMEWORK_H
+#include "TestSuites.h"
+
+void RunAllTests(void);
 
 #endif // UNITTESTFRAMEWORK_H

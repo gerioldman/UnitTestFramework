@@ -1,0 +1,7 @@
+bin/main.exe
+obj/main.o
+obj/TestSuite1.o
+obj/TestSuite2.o
+obj/TestSuite3.o
+obj/TestSuites.o
+obj/UnitTestFramework.o

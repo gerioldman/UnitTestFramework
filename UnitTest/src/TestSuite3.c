@@ -17,5 +17,5 @@
  */
 void TestSuite3(void)
 {
-    printf("TestSuite3 was executed/n");
+    printf("TestSuite3 was executed\n");
 }

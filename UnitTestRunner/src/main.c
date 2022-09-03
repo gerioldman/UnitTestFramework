@@ -10,3 +10,11 @@
  */
 
 #include "UnitTestFramework.h"
+
+int main(int argc, char *argv[])
+{
+    // Run all tests
+    RunAllTests();
+
+    return 0;
+}
