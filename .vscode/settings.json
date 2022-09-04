@@ -5,5 +5,8 @@
             "binaryPath": "c:\\Users\\kgerg\\Desktop\\Egyetem\\7.felev\\UnitTestFramework\\bin\\main.exe",
             "binaryArgs": []
         }
-    ]
+    ],
+    "files.associations": {
+        "unittestassert.h": "c"
+    }
 }

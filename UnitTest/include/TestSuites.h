@@ -12,17 +12,26 @@
 #ifndef TESTSUITES_H
 #define TESTSUITES_H
 
-#define TEST_SUITE_END 0
+#define TEST_SUITE_END  0
+#define TEST_CASE_END   0
 
-typedef void (*TestSuite)(void);
+typedef struct {
+    const char* name;
+    void (*funct_ptr)(void);
+}TestCase;
 
-extern TestSuite testSuites[];
+typedef struct{
+    const char* name;
+    TestCase TestCases[];
+}TestSuite;
+
+extern TestSuite *testSuites[];
 
 /* List TestSuites here */
 
-extern void TestSuite1(void);
-extern void TestSuite2(void);
-extern void TestSuite3(void);
+extern TestSuite TestSuite1;
+extern TestSuite TestSuite2;
+extern TestSuite TestSuite3;
 
 /* End of TestSuites */
 

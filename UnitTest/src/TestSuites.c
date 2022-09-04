@@ -1,9 +1,9 @@
 /**
  * @file TestSuites.c
- * @author your name (you@domain.com)
+ * @author gerioldman (k.gergo49@gmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-09-03
+ * @date 2022-09-04
  * 
  * @copyright Copyright (c) 2022
  * 
@@ -15,9 +15,9 @@
  * @brief 
  * 
  */
-TestSuite testSuites[] = {
-    TestSuite1,
-    TestSuite2,
-    TestSuite3,
+TestSuite* testSuites[] = {
+    &TestSuite1,
+    &TestSuite2,
+    &TestSuite3,
     TEST_SUITE_END
-}; 
+};
