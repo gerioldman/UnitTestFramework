@@ -19,7 +19,7 @@ void RunAllTests(void)
         printf("Executing TestSuite: %s\n",testSuites[i]->name);
         for (int j = 0;(testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            printf("\tExecuting TestCase: %s\n",(testSuites[i])->TestCases[j].name);
+            printf("|_Executing TestCase: %s\n",(testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }

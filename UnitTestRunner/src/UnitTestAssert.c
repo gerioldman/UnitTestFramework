@@ -11,12 +11,10 @@
 
 #include "UnitTestAssert.h"
 
-
-
-static void BaseAssert(boolean condition, char* message, char* file, int line)
+void AssertImplementation(boolean condition, char* message, char* file, int line)
 {
     if (condition == FALSE)
     {
-        printf("`e[34m%s:%d: %s`e[0m");
+        printf(" |_\e[1;31m%s:%d: %s\e[0m\n", file, line, message);
     }
 }

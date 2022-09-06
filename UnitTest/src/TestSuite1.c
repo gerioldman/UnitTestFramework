@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "TestSuites.h"
+#include "UnitTestAssert.h"
 
 
 /**
@@ -19,7 +20,7 @@
  */
 void TS1_TestCase1(void)
 {
-    
+    ASSERT_EQUAL(0, 1);
 }
 /**
  * @brief 
@@ -27,7 +28,7 @@ void TS1_TestCase1(void)
  */
 void TS1_TestCase2(void)
 {
-    
+    ASSERT_EQUAL(1, 1);
 }
 
 /**
@@ -36,7 +37,9 @@ void TS1_TestCase2(void)
  */
 void TS1_TestCase3(void)
 {
-    
+    ASSERT_EQUAL(10, 0);
+    ASSERT_EQUAL(0, 1);
+    ASSERT_EQUAL(1, 2);
 }
 
 

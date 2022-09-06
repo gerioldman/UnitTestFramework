@@ -18,4 +18,9 @@ typedef unsigned char   boolean;
 #define TRUE            1
 #define FALSE           0
 
+#define ASSERT_EQUAL(expected, actual) \
+        AssertImplementation((expected) == (actual),#expected","#actual,__FILE__,__LINE__)
+
+void AssertImplementation(boolean condition, char* message, char* file, int line);
+
 #endif

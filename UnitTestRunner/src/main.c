@@ -14,7 +14,7 @@
 int main(int argc, char *argv[])
 {
     // Run all tests
+    printf("\x1b[32mRunning all tests\x1b[0m\n");
     RunAllTests();
-
     return 0;
 }
