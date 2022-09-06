@@ -19,7 +19,25 @@ typedef unsigned char   boolean;
 #define FALSE           0
 
 #define ASSERT_EQUAL(expected, actual) \
-        AssertImplementation((expected) == (actual),#expected","#actual,__FILE__,__LINE__)
+        AssertImplementation((expected) == (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__)
+
+#define ASSERT_NOT_EQUAL(expected, actual) \
+        AssertImplementation((expected) != (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__)
+
+#define ASSERT_NULL(pointer) \
+        AssertImplementation((pointer) == NULL,"error: (pointer:"#pointer")",__FILE__,__LINE__)
+
+#define ASSERT_NOT_NULL(pointer) \
+        AssertImplementation((pointer) != NULL,"error: (pointer:"#pointer")",__FILE__,__LINE__)
+
+#define ASSERT_TRUE(condition) \
+        AssertImplementation((condition) == TRUE,"error: (condition:"#condition")",__FILE__,__LINE__)
+
+#define ASSERT_FALSE(condition) \
+        AssertImplementation((condition) == FALSE,"error: (condition:"#condition")",__FILE__,__LINE__)
+
+
+
 
 void AssertImplementation(boolean condition, char* message, char* file, int line);
 
