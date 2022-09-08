@@ -12,5 +12,6 @@
     "gcovViewer.highlightMissedLines": true,
     "gcovViewer.buildDirectories": [
         "c:\\Users\\kgerg\\Desktop\\Egyetem\\7.felev\\UnitTestFramework\\obj"
-    ]
+    ],
+    "taskExplorer.pathToMake": "make"
 }

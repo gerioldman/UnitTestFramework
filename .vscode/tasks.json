@@ -13,7 +13,14 @@
                 "$gcc"
             ],
             "presentation": {
-                "reveal": "always"
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "focus": false,
+                "echo": false,
+                "showReuseMessage": false,
+                "close": false,
+                "revealProblems": "never"
             },
             "group": "build"
         },
@@ -29,7 +36,15 @@
                 "$gcc"
             ],
             "presentation": {
-                "reveal": "always"
+                
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "focus": false,
+                "echo": false,
+                "showReuseMessage": false,
+                "close": false,
+                "revealProblems": "never"
             },
             "group": "build",
             "dependsOn": [
@@ -48,7 +63,15 @@
                 "$gcc"
             ],
             "presentation": {
-                "reveal": "always"
+                
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "focus": false,
+                "echo": false,
+                "showReuseMessage": false,
+                "close": false,
+                "revealProblems": "never"
             },
             "group": "build"
         }
