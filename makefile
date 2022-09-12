@@ -1,5 +1,6 @@
 include UnitTestRunner/UnitTestRunner.mk
 include UnitTest/UnitTest.mk
+include Unit/Unit.mk
 
 #SHELL := pwsh.exe
 
@@ -10,9 +11,10 @@ BIN     := ./bin
 OBJ     := ./obj
 COV     := ./coverage
 LIB	 	:= ./UnitTestRunner/lib
-OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS)
+OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
-CFLAGS  := -g -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -fprofile-arcs -ftest-coverage -Wall
+CFLAGS  := -g -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITINCLUDE) -Wall
+COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm -lpdcurses
 
@@ -20,7 +22,7 @@ LDLIBS  := -lm -lpdcurses
 
 all: $(EXE)
 
-$(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) | $(BIN)
+$(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS) | $(BIN)
 	echo Linking $@
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
@@ -32,14 +34,23 @@ $(UNITTESTOBJS): $(OBJ)/%.o: $(UNITTESTSRC)/%.c | $(OBJ)
 	echo Compiling $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
+	echo Compiling $<
+	$(CC) $(CFLAGS) $(COVFLAGS) -c $< -o $@
+
 $(BIN) $(OBJ) $(COV):
 	$(MKDIR) $@
 
-run: $(EXE)
+run: $(EXE) | $(COV)
 	echo "Running $<"
 	$<
-
-
+	gcovr -r . --html --html-details -o $(COV)/index.html
 
 clean:
 	$(RMDIR) $(OBJ) $(BIN) $(COV)
+
+
+#coverage: $(EXE)
+#	echo "Running $<"
+#	$<
+#	
