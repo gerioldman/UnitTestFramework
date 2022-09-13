@@ -1,21 +1,42 @@
 /**
  * @file main.c
  * @author gerioldman (k.gergo49@gmail.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2022-09-04
- * 
+ *
  * @copyright Copyright (c) 2022
- * 
+ *
  */
 
 #include "UnitTestFramework.h"
-#include <curses.h>
 
 int main(int argc, char *argv[])
 {
-    // Run all tests
-    printf("\x1b[32mRunning all tests\x1b[0m\n");
-    RunAllTests();
+    if(argc<2)
+    {
+        CursesMenu();
+    }
+    else{
+        if(strcmp(argv[1],"-s")==0){
+            RunAllTests_Screen();
+        }
+        else if(strcmp(argv[1],"-c")==0){
+            RunAllTests_Curses();
+        }
+        else if(strcmp(argv[1],"-f")==0){
+            RunAllTests_File();
+        }
+        else if(strcmp(argv[1],"-fs")==0){
+            RunAllTests_ScreenAndFile();
+        }
+        else{
+            printf("\x1b[1;31mRun Mode incorrect. Please specify a correct runmode.\x1b[0m\n\
+            1. Log to screen:\t\t-s\n\
+            2. Curses mode:\t\t\t-c\n\
+            3. Log to file:\t\t\t-f\n\
+            4. Log to file and screen:\t-fs\n");
+        }
+    }
     return 0;
 }

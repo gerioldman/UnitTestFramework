@@ -13,7 +13,15 @@
 #define UNITTESTFRAMEWORK_H
 #include "TestSuites.h"
 #include <stdio.h>
+#include <curses.h>
+#include <stdlib.h>
+#include <string.h>
+#include "UnitTestAssert.h"
 
-void RunAllTests(void);
+void RunAllTests_Screen(void);
+void RunAllTests_File(void);
+void RunAllTests_Curses(void);
+void RunAllTests_ScreenAndFile(void);
+void CursesMenu(void);
 
 #endif // UNITTESTFRAMEWORK_H

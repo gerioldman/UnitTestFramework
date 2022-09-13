@@ -10,11 +10,15 @@
  */
 
 #include "UnitTestAssert.h"
+#include "curses.h"
 
 void AssertImplementation(boolean condition, char* message, char* file, int line)
 {
     if (condition == FALSE)
     {
-        printf("\e[1;31m%s:%d: %s\e[0m\n", file, line, message);
+        attron(COLOR_PAIR(1));
+        printw("%s:%d: %s\n", file, line, message);
+        attroff(COLOR_PAIR(1));
+        refresh();
     }
 }
