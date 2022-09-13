@@ -53,14 +53,16 @@ run: $(EXE)
 	echo "Running $<"
 	$< ${TESTAPPARGS}
 
+# Run the executable with coverage analysis with summary on stdout
 coverage: clean run | $(COV)
 	gcovr -r . -s
 
-# Run the executable with coverage analysis
+# Run the executable with coverage analysis with html output
 coverage-html: clean run | $(COV)
 	gcovr -r . --html --html-details -o ${COV}/index.html
 
+# Clean the build
 clean:
-	$(RMDIR) $(OBJ) $(BIN) $(COV)
+	$(RMDIR) $(OBJ) $(BIN) $(COV) *.txt
 
 # End of makefile
