@@ -2,14 +2,12 @@ include UnitTestRunner/UnitTestRunner.mk
 include UnitTest/UnitTest.mk
 include Unit/Unit.mk
 
-#SHELL := pwsh.exe
-
 MKDIR   := mkdir
 RMDIR   := rm -rf
 CC      := gcc
 BIN     := ./bin
 OBJ     := ./obj
-COV     := ./coverage
+COV     := ./cov
 LIB	 	:= ./UnitTestRunner/lib
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
@@ -18,7 +16,7 @@ COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm -lpdcurses
 
-.PHONY: all run clean coverage
+.PHONY: all run coverage clean 
 
 all: $(EXE)
 
@@ -39,18 +37,16 @@ $(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
 	$(CC) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
 $(BIN) $(OBJ) $(COV):
-	$(MKDIR) $@
+	$(MKDIR) -p $@
 
-run: $(EXE) | $(COV)
+run: $(EXE)
 	echo "Running $<"
-	$<
-	gcovr -r . --html --html-details -o $(COV)/index.html
+	$< ${TESTAPPARGS}
+
+coverage: run | $(COV)
+	gcovr -r . --html --html-details -o ${COV}/index.html
 
 clean:
 	$(RMDIR) $(OBJ) $(BIN) $(COV)
 
-
-#coverage: $(EXE)
-#	echo "Running $<"
-#	$<
-#	
+# End of makefile
