@@ -11,39 +11,53 @@ COV     := ./cov
 LIB	 	:= ./UnitTestRunner/lib
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
-CFLAGS  := -g -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITINCLUDE) -Wall
+CFLAGS  := -g -Wall -MMD -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITINCLUDE)
 COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm -lpdcurses
 
+# Include the dependency files
+-include $(OBJS:%.o=%.d)
+
 .PHONY: all run coverage clean 
 
+# Build the executable
 all: $(EXE)
 
+# Link the executable
 $(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS) | $(BIN)
 	echo Linking $@
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
+# Compile the UnitTestRunner source files
 $(UNITTESTRUNNEROBJS): $(OBJ)/%.o: $(UNITTESTRUNNERSRC)/%.c | $(OBJ)
 	echo Compiling $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Compile the UnitTest source files
 $(UNITTESTOBJS): $(OBJ)/%.o: $(UNITTESTSRC)/%.c | $(OBJ)
 	echo Compiling $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Compile the Unit source files
 $(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
 	echo Compiling $<
 	$(CC) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
+# Create needed directories
 $(BIN) $(OBJ) $(COV):
 	$(MKDIR) -p $@
 
+# Run the executable
 run: $(EXE)
 	echo "Running $<"
 	$< ${TESTAPPARGS}
 
-coverage: run | $(COV)
+coverage: clean run | $(COV)
+	gcovr -r . -s
+
+# Run the executable with coverage analysis
+coverage-html: clean run | $(COV)
 	gcovr -r . --html --html-details -o ${COV}/index.html
 
 clean:
