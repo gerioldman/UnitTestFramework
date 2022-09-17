@@ -10,12 +10,14 @@
         "request": "launch",
         "program": "${workspaceFolder}/bin/main.exe",
         "args": [
-            "-m"
+            "-c",
+            "-a",
+            "--colour"
         ],
         "stopAtEntry": true,
         "cwd": "${fileDirname}",
         "environment": [],
-        "externalConsole": false,
+        "externalConsole": true,
         "MIMode": "gdb",
         "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
         "setupCommands": [
@@ -29,6 +31,7 @@
                 "text": "-gdb-set disassembly-flavor intel",
                 "ignoreFailures": true
             }
+
         ],
         "preLaunchTask": "Build"
     }
