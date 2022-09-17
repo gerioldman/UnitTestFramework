@@ -18,6 +18,21 @@ int main(int argc, char *argv[])
         CursesMenu();
     }
     else{
+        unsigned char argi = 2;
+        while (argi < argc)
+        {
+            if(strcmp(argv[argi],"-a")==0) 
+            {
+                AssertMode = PRINT_EVERY_ASSERT;
+            }
+            else if(strcmp(argv[argi],"--colour")==0){
+                ColourMode = COLOUR;
+            }
+            argi++;
+        }
+        if(strcmp(argv[1],"-m")==0){
+            CursesMenu();
+        }
         if(strcmp(argv[1],"-s")==0){
             RunAllTests_Screen();
         }
@@ -33,8 +48,8 @@ int main(int argc, char *argv[])
         else{
             printf("\x1b[1;31mRun Mode incorrect. Please specify a correct runmode.\x1b[0m\n\
             1. Log to screen:\t\t-s\n\
-            2. Curses mode:\t\t\t-c\n\
-            3. Log to file:\t\t\t-f\n\
+            2. Curses mode:\t\t-c\n\
+            3. Log to file:\t\t-f\n\
             4. Log to file and screen:\t-fs\n");
         }
     }

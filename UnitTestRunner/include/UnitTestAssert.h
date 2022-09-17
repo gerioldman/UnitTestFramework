@@ -14,12 +14,41 @@
 
 #include <stdio.h>
 
+typedef enum{
+    LOG_SCREEN,
+    LOG_FILE,
+    LOG_SCREEN_AND_FILE,
+    LOG_CURSES
+}LogMode_Type;
+
+typedef enum{
+    PRINT_EVERY_ASSERT,
+    PRINT_FAILED_ASSERT
+}AssertMode_Type;
+
+typedef enum{
+    COLOUR,
+    NO_COLOUR
+}ColourMode_Type;
+
+extern LogMode_Type LogMode;
+extern AssertMode_Type AssertMode;
+extern ColourMode_Type ColourMode;
+extern FILE *LogFile;
+
 typedef unsigned char   boolean;
 #define TRUE            1
 #define FALSE           0
 
 #define ASSERT_EQUAL(expected, actual) \
-        AssertImplementation((expected) == (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__)
+        if(expected == actual) \
+        { \
+                AssertImplementation((expected) == (actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        } \
+        else \
+        { \
+                AssertImplementation((expected) == (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        }
 
 #define ASSERT_NOT_EQUAL(expected, actual) \
         AssertImplementation((expected) != (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__)

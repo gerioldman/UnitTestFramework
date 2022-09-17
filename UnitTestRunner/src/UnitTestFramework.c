@@ -11,12 +11,14 @@
 
 #include "UnitTestFramework.h"
 
+
 /**
  * @brief
  *
  */
 void RunAllTests_Screen(void)
 {
+    LogMode = LOG_SCREEN;
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
@@ -31,6 +33,7 @@ void RunAllTests_Screen(void)
 
 void RunAllTests_Curses(void)
 {
+    LogMode = LOG_CURSES;
     initscr();
     start_color();
     init_pair(1, COLOR_RED, COLOR_BLACK);
@@ -62,38 +65,38 @@ void RunAllTests_Curses(void)
 
 void RunAllTests_File(void)
 {
-    FILE *fp;
-    fp = fopen("test.txt", "w");
+    LogMode = LOG_FILE;
+    LogFile = fopen("test.txt", "w");
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        fprintf(fp, "Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            fprintf(fp, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
-    fclose(fp);
+    fclose(LogFile);
 }
 
 void RunAllTests_ScreenAndFile(void)
 {
-    FILE *fp;
-    fp = fopen("test.txt", "w");
+    LogMode = LOG_SCREEN_AND_FILE;
+    LogFile = fopen("test.txt", "w");
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
         printf("Executing TestSuite: %s\n", testSuites[i]->name);
-        fprintf(fp, "Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
             printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
-            fprintf(fp, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
-    fclose(fp);
+    fclose(LogFile);
 }
 
 void CursesMenu(void)
@@ -121,9 +124,9 @@ void CursesMenu(void)
     char *choices[] = {
         "Run all tests on screen",
         "Run all tests on screen and file",
-        "Run all tests on screen and curses",
-        "Run all tests on file",
         "Run all tests on curses",
+        "Run all tests on file",
+        "Run specific TestSuite",
         "Exit",
     };
 
@@ -169,6 +172,25 @@ void CursesMenu(void)
         }
         if (choice == 10)
             break;
+    }
+
+    switch (highlight)
+    {
+    case 0:
+        RunAllTests_Screen();
+        break;
+    case 1:
+        RunAllTests_ScreenAndFile();
+        break;
+    case 2:
+        RunAllTests_Curses();
+        break;
+    case 3:
+        RunAllTests_File();
+        break;
+    case 4:
+        //RunSpecificTestSuite();
+        break;
     }
 
     endwin();
