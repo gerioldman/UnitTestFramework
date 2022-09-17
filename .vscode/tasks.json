@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build",
+            "label": "All",
             "command": "make",
             "type": "shell",
             "args": [
@@ -20,7 +20,7 @@
                 "echo": false,
                 "showReuseMessage": false,
                 "close": false,
-                "revealProblems": "never"
+                "revealProblems": "never",
             },
             "group": "build"
         },
@@ -29,6 +29,9 @@
             "command": "./bin/main.exe",
             "type": "shell",
             "args": [
+                "-c",
+                "-a",
+                "--colour"
             ],
             "problemMatcher": [
                 "$gcc"
@@ -72,7 +75,56 @@
                 "close": false,
                 "revealProblems": "never"
             },
-            "group": "build"
+            "group": "none"
+        },
+        {
+            "label": "Coverage",
+            "command": "make",
+            "type": "shell",
+            "args": [
+                "-s",
+                "coverage"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "focus": false,
+                "echo": false,
+                "showReuseMessage": false,
+                "close": false,
+                "revealProblems": "never"
+            },
+            "group": "test"
+        },
+        {
+            "label": "Coverage-HTML",
+            "command": "make",
+            "type": "shell",
+            "args": [
+                "-s",
+                "coverage-html"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true,
+                "focus": false,
+                "echo": false,
+                "showReuseMessage": false,
+                "close": false,
+                "revealProblems": "never"
+            },
+            "group": "test"
         }
+
     ]
 }
