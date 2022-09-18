@@ -8,6 +8,7 @@ CC      := gcc
 BIN     := ./bin
 OBJ     := ./obj
 COV     := ./cov
+PRE     := ./pre
 LIB	 	:= ./UnitTestRunner/lib
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
@@ -19,7 +20,7 @@ LDLIBS  := -lm -lpdcurses
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
 
-.PHONY: all run coverage clean 
+.PHONY: all run coverage coverage-html clean 
 
 # Build the executable
 all: $(EXE)
@@ -45,7 +46,7 @@ $(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
 	$(CC) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
 # Create needed directories
-$(BIN) $(OBJ) $(COV):
+$(BIN) $(OBJ) $(COV) $(PRE):
 	$(MKDIR) -p $@
 
 # Run the executable
@@ -61,8 +62,18 @@ coverage: clean run | $(COV)
 coverage-html: clean run | $(COV)
 	gcovr -r . --html --html-details -o ${COV}/index.html
 
+# Preprocess the source files for automatic unit stub generation
+$(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
+	echo Preprocessing $<
+	$(CC) $(CFLAGS) -E $< -o $@
+
+# Generate the unit stubs
+preprocess: $(UNITPREPARE)
+	echo Starting automatic unit stub generation
+
 # Clean the build
 clean:
-	$(RMDIR) $(OBJ) $(BIN) $(COV) *.txt
+	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt
+	echo "... Clean done ..." 
 
 # End of makefile
