@@ -10,12 +10,12 @@
         "request": "launch",
         "program": "${workspaceFolder}/bin/main.exe",
         "args": [
-            "-c",
             "-a",
-            "--colour"
+            "--colour",
+            "-m"
         ],
         "stopAtEntry": true,
-        "cwd": "${fileDirname}",
+        "cwd": "${workspaceFolder}",
         "environment": [],
         "externalConsole": true,
         "MIMode": "gdb",
@@ -33,7 +33,7 @@
             }
 
         ],
-        "preLaunchTask": "Build"
+        "preLaunchTask": "All"
     }
     ],
     
