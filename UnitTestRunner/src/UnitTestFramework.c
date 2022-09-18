@@ -173,7 +173,7 @@ void CursesMenu(void)
         if (choice == 10)
             break;
     }
-
+    endwin();
     switch (highlight)
     {
     case 0:
@@ -190,6 +190,9 @@ void CursesMenu(void)
         break;
     case 4:
         //RunSpecificTestSuite();
+        break;
+    case 5:
+        // do nothing
         break;
     }
 
