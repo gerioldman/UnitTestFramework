@@ -1,4 +1,6 @@
 bin/
 obj/
 cov/
+pre/
 *.txt
+

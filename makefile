@@ -5,6 +5,8 @@ include Unit/Unit.mk
 MKDIR   := mkdir
 RMDIR   := rm -rf
 CC      := gcc
+PYTHON  := python
+UNITSTUBGEN := ./UnitTestSupport.py
 BIN     := ./bin
 OBJ     := ./obj
 COV     := ./cov
@@ -20,7 +22,7 @@ LDLIBS  := -lm -lpdcurses
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
 
-.PHONY: all run coverage coverage-html clean 
+.PHONY: all run coverage coverage-html clean stubgen
 
 # Build the executable
 all: $(EXE)
@@ -71,6 +73,9 @@ $(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
 preprocess: $(UNITPREPARE)
 	echo Starting automatic unit stub generation
 
+stubgen: clean preprocess
+	echo Generating unit stubs
+	$(PYTHON) $(UNITSTUBGEN) $(UNITPREPARE)
 # Clean the build
 clean:
 	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt

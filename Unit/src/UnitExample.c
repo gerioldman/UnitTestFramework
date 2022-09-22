@@ -1,7 +1,13 @@
 
 #include "UnitExample.h"
+#include "lib.h"
 
 int UnitExample(int a, int b)
 {
-    return a + b;
+    if (a > 10u){
+        return a + b;
+    }
+    else{
+        return a - b;
+    }
 }
