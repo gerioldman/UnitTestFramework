@@ -4,10 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Unit/include",
-                "${workspaceFolder}/UnitTest/include",
-                "${workspaceFolder}/UnitTestRunner/include",
-                "C:\\MinGW\\include"
+                "${workspaceFolder}/UnitTest/include/**",
+                "${workspaceFolder}/UnitTest/include/stubs/**",
+                "${workspaceFolder}/UnitTestRunner/include/**",
+                "C:\\msys64\\mingw64\\include"
             ],
             "defines": [
                 "_DEBUG",
@@ -17,9 +17,8 @@
             "windowsSdkVersion": "10.0.19041.0",
             "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
             "cStandard": "c99",
-            "cppStandard": "${default}",
-            "intelliSenseMode": "gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "cppStandard": "c++98",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

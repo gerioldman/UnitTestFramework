@@ -7,7 +7,8 @@
         }
     ],
     "files.associations": {
-        "unittestassert.h": "c"
+        "unittestassert.h": "c",
+        "unitexample.h": "c"
     },
     "gcovViewer.highlightMissedLines": true,
     "gcovViewer.buildDirectories": [
