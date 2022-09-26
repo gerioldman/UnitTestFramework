@@ -6,6 +6,8 @@ typedef struct {
     int b;
 } lib_t;
 
+typedef lib_t (*lib_fooA_t)(void);
+
 void fooA();
 void fooB();
 int fooC();

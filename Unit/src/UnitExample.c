@@ -1,6 +1,6 @@
 
-#include "UnitExample.h"
 #include "lib.h"
+#include "UnitExample.h"
 
 int UnitExample(int a, int b)
 {
@@ -10,4 +10,13 @@ int UnitExample(int a, int b)
     else{
         return a - b;
     }
+}
+
+lib_t func(void)
+{
+    lib_t lib = {
+        .a = 0,
+        .b = 0
+    };
+    return lib;
 }
