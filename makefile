@@ -14,7 +14,8 @@ PRE     := ./pre
 LIB	 	:= ./UnitTestRunner/lib
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
-CFLAGS  := -g -Wall -MMD -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITINCLUDE)
+CFLAGS  := -g -Wall -MMD -fprofile-abs-path -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITTESTSTUBINCLUDE)#-I$(UNITINCLUDE)
+PREFLAGS:= -I$(UNITINCLUDE)
 COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm -lpdcurses
@@ -28,7 +29,7 @@ LDLIBS  := -lm -lpdcurses
 all: $(EXE)
 
 # Link the executable
-$(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS) | $(BIN)
+$(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITTESTSTUBOBJS) $(UNITOBJS) | $(BIN)
 	echo Linking $@
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
@@ -67,7 +68,7 @@ coverage-html: clean run | $(COV)
 # Preprocess the source files for automatic unit stub generation
 $(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
 	echo Preprocessing $<
-	$(CC) $(CFLAGS) -E $< -o $@
+	$(CC) $(PREFLAGS) -E $< -o $@
 
 # Generate the unit stubs
 preprocess: $(UNITPREPARE)
@@ -78,7 +79,7 @@ stubgen: clean preprocess
 	$(PYTHON) $(UNITSTUBGEN) $(UNITPREPARE)
 # Clean the build
 clean:
-	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt
+	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt $(UNITTESTSTUBINCLUDE)/*.h $(UNITTESTSTUBSRC)/*.c
 	echo "... Clean done ..." 
 
 # End of makefile
