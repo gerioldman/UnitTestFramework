@@ -1,0 +1,166 @@
+{
+    "unit":{
+        "unit_id": "1",
+        "name":"UnitExample",
+        "description":"example description",
+        "defines":
+        [
+            {
+                "define_id": "1",
+                "define_name": "TEN",
+                "define_value": "10"
+            }
+        ],
+        "types":
+        [
+            {
+                "type_id": "1",
+                "name":"example_Type",
+                "baseType":"unsigned char",
+                "qualifiers":
+                [
+                    {
+                        "name":"example_qualifier_1",
+                        "value":"example_value"
+                    }
+                ]
+            },
+            {
+                "type_id": "2",
+                "name":"example_Type2",
+                "baseType":"unsigned short",
+                "qualifiers":
+                [
+                    {
+                        "name":"example_qualifier_2",
+                        "value":"example_value"
+                    }
+                ]
+            }
+        ],
+        "variables":
+        [
+            {
+                "variable_id": "1",
+                "name":"example_variable",
+                "type":"example_Type",
+                "qualifiers":
+                [
+                    {
+                        "name":"example_qualifier_1"
+                    },
+                    {
+                        "name":"example_qualifier_2"
+                    }
+                ]
+            }
+        ],
+        "interfaces":
+        [
+            {
+                "interface_id": "1",
+                "name":"example_interface",
+                "qualifiers":
+                [
+                    {
+                        "name":"example_qualifier_1"
+                    },
+                    {
+                        "name":"example_qualifier_2"
+                    }
+                ],
+                "methods":
+                [
+                    {
+                        "method_id": "1",
+                        "name":"example_method",
+                        "qualifiers":
+                        [
+                            {
+                                "name":"example_qualifier_1"
+                            },
+                            {
+                                "name":"example_qualifier_2"
+                            }
+                        ],
+                        "parameters":
+                        [
+                            {
+                                "parameter_id": "1",
+                                "name":"example_parameter",
+                                "type":"example_Type",
+                                "qualifiers":
+                                [
+                                    {
+                                        "name":"example_qualifier_1"
+                                    },
+                                    {
+                                        "name":"example_qualifier_2"
+                                    }
+                                ]
+                            }
+                        ],
+                        "return":
+                        {
+                            "type":"example_Type",
+                            "qualifiers":
+                            [
+                                {
+                                    "name":"example_qualifier_1"
+                                },
+                                {
+                                    "name":"example_qualifier_2"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ],
+        "functions":[
+            {
+                "function_id": "1",
+                "name":"example_function",
+                "qualifiers":
+                [
+                    {
+                        "name":"example_qualifier_1"
+                    },
+                    {
+                        "name":"example_qualifier_2"
+                    }
+                ],
+                "parameters":
+                [
+                    {
+                        "parameter_id": "1",
+                        "name":"example_parameter",
+                        "type":"example_Type",
+                        "qualifiers":
+                        [
+                            {
+                                "name":"example_qualifier_1"
+                            },
+                            {
+                                "name":"example_qualifier_2"
+                            }
+                        ]
+                    }
+                ],
+                "return":
+                {
+                    "type":"example_Type",
+                    "qualifiers":
+                    [
+                        {
+                            "name":"example_qualifier_1"
+                        },
+                        {
+                            "name":"example_qualifier_2"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
