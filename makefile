@@ -23,10 +23,19 @@ LDLIBS  := -lm -lpdcurses
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
 
-.PHONY: all run coverage coverage-html clean stubgen
+.PHONY: all run coverage coverage-html clean stubgen check
 
 # Build the executable
 all: $(EXE)
+
+# Check for dependencies
+check: 
+	echo "# Check for Compiler:"
+	$(CC) --version
+	echo "# Check for Python:"
+	$(PYTHON) --version
+	echo "# Check for gcovr:"
+	gcovr --version
 
 # Link the executable
 $(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITTESTSTUBOBJS) $(UNITOBJS) | $(BIN)
