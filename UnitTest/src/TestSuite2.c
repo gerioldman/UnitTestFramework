@@ -47,5 +47,7 @@ TestSuite TestSuite2 = {
         {"TS2_TestCase2",TS2_TestCase2},
         {"TS2_TestCase3",TS2_TestCase3},
         {"TEST_CASE_END",TEST_CASE_END}
-    }
+    },
+    .cleanUpBefore_funcPtr = cleanUpBefore,
+    .cleanUpAfter_funcPtr = cleanUpAfter
 };

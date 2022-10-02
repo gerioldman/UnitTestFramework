@@ -21,3 +21,21 @@ TestSuite* testSuites[] = {
     &TestSuite3,
     TEST_SUITE_END
 };
+
+/**
+ * @brief 
+ * 
+ */
+void cleanUpBefore(void)
+{
+
+}
+
+/**
+ * @brief 
+ * 
+ */
+void cleanUpAfter(void)
+{
+    
+}

@@ -15,7 +15,7 @@ LIB	 	:= ./UnitTestRunner/lib
 OBJS    := $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITOBJS)
 EXE     := $(BIN)/main.exe
 CFLAGS  := -g -Wall -MMD -fprofile-abs-path -I$(UNITESTRUNNERINCLUDE) -I$(UNITESTINCLUDE) -I$(UNITTESTSTUBINCLUDE)
-PREFLAGS:= -I$(UNITINCLUDE)
+PREFLAGS:= -I$(UNITINCLUDE) -DUNITTEST=1
 COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm -lpdcurses
@@ -84,9 +84,10 @@ $(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
 # Generate the unit stubs
 preprocess: $(UNITPREPARE)
 
-stubgen: clean preprocess
+stubgen: clean 
 	echo # Generating unit stubs
-	$(PYTHON) $(UNITSTUBGEN) $(UNITPREPARE)
+	$(PYTHON) $(UNITSTUBGEN) $(UNITSOURCE)
+
 # Clean the build
 clean:
 	echo "# Cleaning" 

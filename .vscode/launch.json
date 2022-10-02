@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "args": [
-                "pre/UnitExample.i"
+                "Unit/src/UnitExample.c"
             ],
             "console": "integratedTerminal",
             "justMyCode": true

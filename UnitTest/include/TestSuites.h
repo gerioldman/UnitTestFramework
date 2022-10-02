@@ -12,8 +12,15 @@
 #ifndef TESTSUITES_H
 #define TESTSUITES_H
 
+/* Includes */
+
+
+/* Macros */
+
 #define TEST_SUITE_END  0
 #define TEST_CASE_END   0
+
+/* Type Definitions */
 
 typedef struct {
     const char* name;
@@ -22,6 +29,8 @@ typedef struct {
 
 typedef struct{
     const char* name;
+    void (*cleanUpBefore_funcPtr)(void);
+    void (*cleanUpAfter_funcPtr)(void);
     TestCase TestCases[];
 }TestSuite;
 
@@ -34,5 +43,9 @@ extern TestSuite TestSuite2;
 extern TestSuite TestSuite3;
 
 /* End of TestSuites */
+
+/* Clean up functions */
+void cleanUpBefore(void);
+void cleanUpAfter(void);
 
 #endif // TESTSUITES_H

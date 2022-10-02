@@ -3,3 +3,5 @@ obj/
 cov/
 pre/
 *.txt
+UnitTest/include/stubs/
+UnitTest/src/stubs

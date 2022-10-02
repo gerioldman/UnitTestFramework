@@ -1,6 +1,10 @@
 
 #include "lib.h"
 #include "UnitExample.h"
+#include <stdint.h>
+
+lib_fooA_t funcPtr;
+uint16_t variable;
 
 int UnitExample(int a, int b)
 {
