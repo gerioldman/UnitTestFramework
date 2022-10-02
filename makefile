@@ -57,6 +57,11 @@ $(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
 	echo "# Compiling $<"
 	$(CC) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
+$(UNITTESTSTUBOBJS): $(OBJ)/%.o: $(UNITTESTSTUBSRC)/%.c | $(OBJ)
+	echo "# Compiling $<"
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+
 # Create needed directories
 $(BIN) $(OBJ) $(COV) $(PRE):
 	$(MKDIR) -p $@
