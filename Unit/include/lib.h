@@ -1,6 +1,12 @@
 #ifndef LIB_H
 #define LIB_H
 
+typedef enum{
+    LIB_OK = 0,
+    LIB_ERROR = 1
+}lib_t2;
+
+
 typedef struct {
     int a;
     int b;

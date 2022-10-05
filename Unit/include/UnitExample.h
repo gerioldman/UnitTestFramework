@@ -4,12 +4,18 @@
 #include "lib.h"
 #include <stdint.h>
 
+typedef struct
+{
+    struct {
+        lib_fooA_t redirectFuncPtr;
+    } fooA;
+} lib_t3;
 
 lib_fooA_t funcPtr;
 uint8_t variable;
 
-int UnitExample(int a, int b);
+int UnitExample(int a, int *b);
 
-lib_t func(void);
+lib_t3 func(void);
 
 #endif // UNITEXAMPLE_H

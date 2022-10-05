@@ -23,7 +23,8 @@ void TS1_TestCase1(void)
     int a = 1;
     int b = 2;
     int expected = 3;
-    int actual = UnitExample(a,b);
+    int actual = TEST_CALL_UnitExample(a,b);
+    ASSERT_EQUAL(TEST_STUB.UnitExample.callcount, 1);
     ASSERT_EQUAL(expected, actual);
 }
 /**

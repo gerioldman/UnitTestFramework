@@ -6,6 +6,7 @@ import curses
 import os
 import re
 from tokenize import group
+from unicodedata import name
 
 from pycparser import parse_file, c_ast, c_generator
 import pprint as pp
@@ -116,6 +117,37 @@ def makeTypeStubHeader(ast):
     typedefList = getListofTypedef(ast)
     header_list = getHeaderList(ast)
     local_ast = c_ast.FileAST(typedefList)
+    local_ast.ext.append(c_ast.Typedef( name="stub_option_t",
+                                        quals=[],
+                                        type=c_ast.TypeDecl(    declname="stub_option_t",
+                                                                quals=[],
+                                                                align=None,
+                                                                type=c_ast.Enum(    name=None,
+                                                                                    values= c_ast.EnumeratorList(enumerators=[
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_VALUE", value=None),
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_REDIRECT", value=None),
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_UNITCALL", value=None)
+                                                                                    ],
+                                                                                    coord=None
+                                                                                    )
+                                                                                ),
+                                                            ),
+                                        storage=['typedef']))
+    local_ast.ext.append(c_ast.Typedef( name="stub_pArg_option_t",
+                                        quals=[],
+                                        type=c_ast.TypeDecl(    declname="stub_pArg_option_t",
+                                                                quals=[],
+                                                                align=None,
+                                                                type=c_ast.Enum(    name=None,
+                                                                                    values= c_ast.EnumeratorList(enumerators=[
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_PARG_COPY_FROM", value=None),
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_PARG_COPY_TO", value=None),
+                                                                                    ],
+                                                                                    coord=None
+                                                                                    )
+                                                                                ),
+                                                            ),
+                                        storage=['typedef']))
     test_stub = c_ast.Typedef(name='TEST_STUB_TYPE',
                                     quals=['extern'],
                                     type=c_ast.TypeDecl(   declname='TEST_STUB_TYPE',
@@ -158,6 +190,105 @@ def makeTypeStubHeader(ast):
                                     storage=['extern']))
     
     makeHeaderFile("types.h", local_ast)
+
+def makeStubCompound(entity):
+    blockItems = []
+    blockItems.append(c_ast.UnaryOp(op='p++', expr=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='callcount'))))
+    blockItems.append(
+        c_ast.Switch(cond=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='stub_option')),
+            stmt=c_ast.Compound(block_items=[
+                c_ast.Case(
+                    coord= None,
+                    expr= c_ast.ID(name='STUB_OPTION_VALUE'),
+                    stmts= [
+                        
+                    ]
+                ),
+                c_ast.Case(
+                    coord= None,
+                    expr= c_ast.ID(name='STUB_OPTION_REDIRECT'),
+                    stmts= [
+                        None,
+                        c_ast.Break(coord=None)
+                    ]
+                )
+            ]),
+            coord=None)
+        )
+    if entity.name.find('TEST_CALL_') != -1:
+        blockItems[1].stmt.block_items.append(c_ast.Case(
+                    coord = None,
+                    expr = c_ast.ID(name='STUB_OPTION_UNITCALL'),
+                    stmts = [
+                    ]
+                ))
+
+    blockItems[1].stmt.block_items.append(c_ast.Default(stmts=[c_ast.Break(coord=None)], coord=None))
+    # Value stub option
+    if entity.type.args != None:
+        if hasattr(entity.type.args, 'params'):
+            if entity.type.args.params != None:
+                for param in entity.type.args.params:
+                    if param.name != None:
+                        if isinstance(param.type, c_ast.TypeDecl):
+                            blockItems[1].stmt.block_items[0].stmts.append(
+                                c_ast.Assignment(
+                                    op='=',
+                                    lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                                    rvalue=c_ast.ID(name=param.name),
+                                    coord=None
+                                )
+                            )
+                        elif isinstance(param.type, c_ast.PtrDecl):
+                            blockItems[1].stmt.block_items[0].stmts.append(
+                                c_ast.If(cond=c_ast.BinaryOp(
+                                    op = '==',
+                                    left= c_ast.StructRef(
+                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                        type='.',
+                                        field= c_ast.ID(name = 'stub_pArg_option')),
+                                        right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
+                                        coord=None),
+                                        iftrue=c_ast.Compound(block_items=[]),
+                                        iffalse=None,
+                                        coord=None)
+                            )
+                        #elif isinstance(param.type, c_ast.ArrayDecl):
+                        #    blockItems[1].stmt.block_items[0].stmts.append(
+                        #        c_ast.Assignment(
+                        #            op='=',
+                        #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                        #            rvalue=c_ast.ID(name=param.name),
+                        #            coord=None
+                        #        )
+                        #    )
+                        #elif isinstance(param.type, c_ast.FuncDecl):
+                        #    blockItems[1].stmt.block_items[0].stmts.append(
+                        #        c_ast.Assignment(
+                        #            op='=',
+                        #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                        #            rvalue=c_ast.ID(name=param.name),
+                        #            coord=None
+                        #        )
+                        #    )
+    # Redirect function call
+    if entity.type.type.type.names[0] == 'void':
+        blockItems[1].stmt.block_items[1].stmts[0] = (c_ast.FuncCall(name=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='redirectFuncPtr')), args=c_ast.ExprList(exprs=[])))
+    else:
+        blockItems[1].stmt.block_items[1].stmts[0] = (c_ast.Return(c_ast.FuncCall(name=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='redirectFuncPtr')), args=c_ast.ExprList(exprs=[]))))
+
+    if entity.type.args != None:
+        if hasattr(entity.type.args, 'params'):
+            if entity.type.args.params != None:
+                for param in entity.type.args.params:
+                    if param.name != None:
+                        if entity.type.type.type.names[0] == 'void':
+                            blockItems[1].stmt.block_items[1].stmts[0].args.exprs.append(c_ast.ID(name=param.name))
+                        else:
+                            blockItems[1].stmt.block_items[1].stmts[0].expr.args.exprs.append(c_ast.ID(name=param.name))
+                        
+    return blockItems
+
 """
     This function creates the stub source file for the Unit Test
 
@@ -185,6 +316,7 @@ def makeStubSource(ast, header_list):
     for entity in funcDeclList:
         if isinstance(entity.type, c_ast.FuncDecl):
             funcDef = c_ast.FuncDef(decl=entity,param_decls=None,body=c_ast.Compound(block_items=[]))
+            funcDef.body.block_items = makeStubCompound(entity)
             local_ast.ext.append(funcDef)
 
     funcDeclList = getListofFuncWithDefinition(declList, funcDefList)
@@ -209,6 +341,7 @@ def makeStubSource(ast, header_list):
                                                         coord=entity.coord),
                                     param_decls=None,
                                     body=c_ast.Compound(block_items=[]))
+            funcDef.body.block_items = makeStubCompound(entity)
             local_ast.ext.append(funcDef)
     
 
@@ -224,6 +357,7 @@ def makeStubSource(ast, header_list):
     f.write("#include \"types.h\"\n")
     for header in header_list:
         f.write("#include \"" + header + "\"\n")
+    result = generator.visit(local_ast) 
     f.write(generator.visit(local_ast))
     f.close()
 
@@ -277,6 +411,18 @@ def makeStubStruct(entity):
                                                                     type=c_ast.IdentifierType(names=['unsigned','long'])),
                                             init=None,
                                             bitsize=None))
+            struct.decls.append(c_ast.Decl( name='stub_option',
+                                            quals=[],
+                                            align=[],
+                                            storage=[],
+                                            funcspec = [],
+                                            type = c_ast.TypeDecl(  align=None,
+                                                                    coord=None,
+                                                                    declname='stub_option',
+                                                                    quals=[],
+                                                                    type=c_ast.IdentifierType(names=['stub_option_t'])),
+                                            init=None,
+                                            bitsize=None))
             if entity.type.type.type.names[0] != 'void':
                 struct.decls.append(c_ast.Decl( name='returnValue',
                                                 quals=[],
@@ -292,9 +438,66 @@ def makeStubStruct(entity):
                                                 bitsize=None))
             if entity.type.args != None:
                 for arg in entity.type.args.params:
-                    if arg.type.type.names[0] != 'void':
-                        struct.decls.append(arg)
-            
+                    # Stub from non pointer type
+                    if isinstance(arg.type.type, c_ast.IdentifierType):
+                        if arg.type.type.names[0] != 'void':
+                            struct.decls.append(arg)
+                    # Stub from Pointer type
+                    elif isinstance(arg.type.type.type, c_ast.IdentifierType):
+                        if arg.type.type.type.names[0] != 'void':
+                            struct.decls.append(c_ast.Decl(
+                                align=[],
+                                bitsize=None,
+                                coord=None,
+                                funcspec=[],
+                                init=None,
+                                name=arg.name,
+                                quals=[],
+                                storage=[],
+                                type = c_ast.TypeDecl(
+                                    align=None,
+                                    coord=None,
+                                    declname=arg.type.type.declname,
+                                    quals=[],
+                                    type= c_ast.Struct(
+                                    name=None,
+                                    decls=[
+                                        c_ast.Decl(
+                                            name='value',
+                                            quals=arg.quals,
+                                            align=arg.align,
+                                            storage=arg.storage,
+                                            funcspec = arg.funcspec,
+                                            type = c_ast.TypeDecl(
+                                                quals=arg.type.type.quals,
+                                                align=arg.type.type.align,
+                                                type=arg.type.type.type,
+                                                coord=arg.type.type.coord,
+                                                declname= 'value'),
+                                            init=arg.init,
+                                            bitsize=arg.bitsize
+                                        ),
+                                        c_ast.Decl(
+                                            name='stub_pArg_option',
+                                            align=[],
+                                            bitsize= None,
+                                            coord= None,
+                                            funcspec= [],
+                                            init= None,
+                                            quals= [],
+                                            storage= [],
+                                            type= c_ast.TypeDecl(
+                                                align= None,
+                                                coord= None,
+                                                declname= 'stub_pArg_option',
+                                                quals= [],
+                                                type= c_ast.IdentifierType(
+                                                    names= ['stub_pArg_option_t']
+                                                )
+                                            )
+                                        )
+                                ]
+                            ))))
             struct.decls.append(c_ast.Decl( name = "redirectFuncPtr",
                                             align=[],
                                             bitsize=None,
@@ -315,7 +518,7 @@ def makeStubStruct(entity):
             typedef.type.type = struct
             c_ast.PtrDecl(  quals=[],
                             type= entity.type,
-                            coord=None,)
+                            coord=None)
             
             typedef.type.type = struct
     return typedef
