@@ -10,7 +10,8 @@
         "unittestassert.h": "c",
         "unitexample.h": "c",
         "stdint.h": "c",
-        "stdint-gcc.h": "c"
+        "stdint-gcc.h": "c",
+        "template": "cpp"
     },
     "gcovViewer.highlightMissedLines": true,
     "gcovViewer.buildDirectories": [
