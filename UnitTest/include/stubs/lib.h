@@ -4,7 +4,7 @@
 #include "types.h"
 void fooA();
 void fooB(void);
-int fooC();
+int fooC(int a, int b);
 float fooD();
 lib_t fooE();
 

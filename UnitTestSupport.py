@@ -1,6 +1,8 @@
 
+from ast import arg
 from email import generator, header
 from msvcrt import getch
+from pickle import TRUE
 import sys
 import curses
 import os
@@ -19,7 +21,6 @@ def returnHeaderName(coord):
         return origin.group()
     else:
         return None
-
 
 # get list of typedefs from AST
 def getListofTypedef(ast):
@@ -45,6 +46,7 @@ def getListofFuncDef(ast):
             funcDefList.append(entity)
     return funcDefList
 
+# get list of function declarations from AST
 def getListofFuncDecl(ast):
     declList = []
     for entity in ast.ext:
@@ -87,8 +89,6 @@ def getListofFuncWithDefinition(declList, funcDefL):
             funcDeclList.append(entity)
     return funcDeclList
 
-
-
 # get list of header files from the list of function declarations
 def getHeaderList(declList):
     headerList = []
@@ -113,6 +113,7 @@ def createFolder():
     if( os.path.isdir("UnitTest/src/stubs") == False):
         os.mkdir("UnitTest/src/stubs")
 
+# create the types.h header file
 def makeTypeStubHeader(ast):
     typedefList = getListofTypedef(ast)
     header_list = getHeaderList(ast)
@@ -125,8 +126,7 @@ def makeTypeStubHeader(ast):
                                                                 type=c_ast.Enum(    name=None,
                                                                                     values= c_ast.EnumeratorList(enumerators=[
                                                                                         c_ast.Enumerator(   name="STUB_OPTION_VALUE", value=None),
-                                                                                        c_ast.Enumerator(   name="STUB_OPTION_REDIRECT", value=None),
-                                                                                        c_ast.Enumerator(   name="STUB_OPTION_UNITCALL", value=None)
+                                                                                        c_ast.Enumerator(   name="STUB_OPTION_REDIRECT", value=None)
                                                                                     ],
                                                                                     coord=None
                                                                                     )
@@ -139,7 +139,8 @@ def makeTypeStubHeader(ast):
                                                                 quals=[],
                                                                 align=None,
                                                                 type=c_ast.Enum(    name=None,
-                                                                                    values= c_ast.EnumeratorList(enumerators=[
+                                                                                    values= 
+                                                                                        c_ast.EnumeratorList(enumerators=[
                                                                                         c_ast.Enumerator(   name="STUB_OPTION_PARG_COPY_FROM", value=None),
                                                                                         c_ast.Enumerator(   name="STUB_OPTION_PARG_COPY_TO", value=None),
                                                                                     ],
@@ -191,110 +192,244 @@ def makeTypeStubHeader(ast):
     
     makeHeaderFile("types.h", local_ast)
 
-def makeStubCompound(entity):
+# Returns wether the entity is a void return type function
+def isVoidType(type):
+    if isinstance(type, c_ast.TypeDecl):
+        if isinstance(type.type, c_ast.IdentifierType):
+            if type.type.names[0] == "void":
+                return True
+    return False
+
+# create stub function definition
+def makeStubCompound(entity, test_call):
     blockItems = []
-    blockItems.append(c_ast.UnaryOp(op='p++', expr=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='callcount'))))
-    blockItems.append(
-        c_ast.Switch(cond=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='stub_option')),
-            stmt=c_ast.Compound(block_items=[
-                c_ast.Case(
-                    coord= None,
-                    expr= c_ast.ID(name='STUB_OPTION_VALUE'),
-                    stmts= [
-                        
-                    ]
-                ),
-                c_ast.Case(
-                    coord= None,
-                    expr= c_ast.ID(name='STUB_OPTION_REDIRECT'),
-                    stmts= [
-                        None,
-                        c_ast.Break(coord=None)
-                    ]
+    index = 1
+
+    #############################################
+    #               STUB FUNCTION               #
+    #############################################
+    
+    if not test_call:
+        if not isVoidType(entity.type.type):
+            index = 2
+            blockItems.append(c_ast.Decl(
+                name = "returnValue",
+                align=None,
+                quals=[],
+                storage=[],
+                bitsize=None,
+                funcspec=[],
+                coord=None,
+                init=None,
+                type=c_ast.TypeDecl(
+                    declname="returnValue",
+                    quals=entity.type.type.quals,
+                    type=c_ast.IdentifierType(names=entity.type.type.type.names),
+                    coord=None,
+                    align=entity.type.type.align
                 )
-            ]),
-            coord=None)
-        )
-    if entity.name.find('TEST_CALL_') != -1:
-        blockItems[1].stmt.block_items.append(c_ast.Case(
-                    coord = None,
-                    expr = c_ast.ID(name='STUB_OPTION_UNITCALL'),
-                    stmts = [
-                    ]
-                ))
+            ))
+        blockItems.append(c_ast.UnaryOp(op='p++', expr=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='callcount'))))
+        blockItems.append(
+            c_ast.Switch(cond=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='stub_option')),
+                stmt=c_ast.Compound(block_items=[
+                    c_ast.Case(
+                        coord= None,
+                        expr= c_ast.ID(name='STUB_OPTION_VALUE'),
+                        stmts= []
+                    ),
+                    c_ast.Case(
+                        coord= None,
+                        expr= c_ast.ID(name='STUB_OPTION_REDIRECT'),
+                        stmts= []
+                    ),
+                    c_ast.Default(
+                        coord= None,
+                        stmts= [
+                            c_ast.Break(coord=None)
+                        ]
+                    )
+                ]),
+                coord=None)
+            )
 
-    blockItems[1].stmt.block_items.append(c_ast.Default(stmts=[c_ast.Break(coord=None)], coord=None))
-    # Value stub option
-    if entity.type.args != None:
-        if hasattr(entity.type.args, 'params'):
-            if entity.type.args.params != None:
-                for param in entity.type.args.params:
-                    if param.name != None:
-                        if isinstance(param.type, c_ast.TypeDecl):
-                            blockItems[1].stmt.block_items[0].stmts.append(
-                                c_ast.Assignment(
-                                    op='=',
-                                    lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
-                                    rvalue=c_ast.ID(name=param.name),
-                                    coord=None
+        # Adding return value
+        if not isVoidType(entity.type.type):
+            blockItems[index].stmt.block_items[0].stmts.append(c_ast.Assignment(op='=', lvalue=c_ast.ID(name='returnValue'), rvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='returnValue'))))
+
+        # Adding parameters to the stub
+        if entity.type.args != None:
+            if hasattr(entity.type.args, 'params'):
+                if entity.type.args.params != None:
+                    for param in entity.type.args.params:
+                        if param.name != None:
+                            if isinstance(param.type, c_ast.TypeDecl):
+                                blockItems[index].stmt.block_items[0].stmts.append(
+                                    c_ast.Assignment(
+                                        op='=',
+                                        lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                                        rvalue=c_ast.ID(name=param.name),
+                                        coord=None
+                                    )
                                 )
+                            elif isinstance(param.type, c_ast.PtrDecl):
+                                blockItems[index].stmt.block_items[0].stmts.append(
+                                    c_ast.If(
+                                    cond=c_ast.BinaryOp
+                                    (
+                                        op = '==',
+                                        left= c_ast.StructRef(
+                                            name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                            type='.',
+                                            field= c_ast.ID(name = 'stub_pArg_option')),
+                                            right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
+                                            coord=None),
+                                            iftrue=c_ast.Compound(block_items=[
+                                                c_ast.Assignment(
+                                                    op='=',
+                                                    lvalue= c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name)),
+                                                    rvalue= c_ast.StructRef
+                                                    (
+                                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                        type='.',
+                                                        field= c_ast.ID(name = 'value')
+                                                    )
+                                                )
+                                            ]),
+                                            iffalse=c_ast.Compound(block_items=[
+                                                c_ast.If(
+                                                    cond=c_ast.BinaryOp(
+                                                        op='==',
+                                                        left = c_ast.StructRef
+                                                        (
+                                                            name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                            type='.',
+                                                            field= c_ast.ID(name = 'stub_pArg_option')
+                                                        ),
+                                                        right = c_ast.ID(name='STUB_OPTION_PARG_COPY_FROM'),
+                                                        coord=None
+                                                    ),
+                                                    iftrue=c_ast.Compound(
+                                                        block_items=[
+                                                            c_ast.Assignment(
+                                                                op='=',
+                                                                lvalue= c_ast.StructRef
+                                                                (
+                                                                    name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                                    type='.',
+                                                                    field= c_ast.ID(name = 'value')
+                                                                ),
+                                                                rvalue=c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name))
+                                                            )
+                                                        ]
+                                                    ),
+                                                    iffalse=None
+                                                )
+                                            ]),
+                                            coord=None
+                                    )
+                                )
+                                #blockItems[index].stmt.block_items[0].stmts.append(
+
+                            #elif isinstance(param.type, c_ast.ArrayDecl):
+                            #    blockItems[1].stmt.block_items[0].stmts.append(
+                            #        c_ast.Assignment(
+                            #            op='=',
+                            #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                            #            rvalue=c_ast.ID(name=param.name),
+                            #            coord=None
+                            #        )
+                            #    )
+                            #elif isinstance(param.type, c_ast.FuncDecl):
+                            #    blockItems[1].stmt.block_items[0].stmts.append(
+                            #        c_ast.Assignment(
+                            #            op='=',
+                            #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                            #            rvalue=c_ast.ID(name=param.name),
+                            #            coord=None
+                            #        )
+                            #    )
+
+        blockItems[index].stmt.block_items[0].stmts.append(c_ast.Break(coord=None))
+
+        # STUB_OPTION_REDIRECT
+        if isVoidType(entity.type.type):
+            blockItems[index].stmt.block_items[1].stmts.append(c_ast.FuncCall(name=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='redirectFuncPtr')), args=c_ast.ExprList(exprs=[])))
+        else:
+            blockItems[index].stmt.block_items[1].stmts.append( 
+                c_ast.BinaryOp
+                (
+                    op='=',
+                    coord=None,
+                    left= c_ast.ID(name='returnValue'),
+                    right= c_ast.FuncCall
+                    (
+                        name=c_ast.StructRef
+                        (
+                            name= c_ast.StructRef
+                            (
+                                name = c_ast.ID
+                                (
+                                    name='TEST_STUB'
+                                ),
+                                type= '.',
+                                field= c_ast.ID
+                                (
+                                    entity.name
+                                )
+                            ), 
+                            type='.',
+                            field= c_ast.ID
+                            (
+                                name ='redirectFuncPtr'
                             )
-                        elif isinstance(param.type, c_ast.PtrDecl):
-                            blockItems[1].stmt.block_items[0].stmts.append(
-                                c_ast.If(cond=c_ast.BinaryOp(
-                                    op = '==',
-                                    left= c_ast.StructRef(
-                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
-                                        type='.',
-                                        field= c_ast.ID(name = 'stub_pArg_option')),
-                                        right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
-                                        coord=None),
-                                        iftrue=c_ast.Compound(block_items=[]),
-                                        iffalse=None,
-                                        coord=None)
-                            )
-                        #elif isinstance(param.type, c_ast.ArrayDecl):
-                        #    blockItems[1].stmt.block_items[0].stmts.append(
-                        #        c_ast.Assignment(
-                        #            op='=',
-                        #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
-                        #            rvalue=c_ast.ID(name=param.name),
-                        #            coord=None
-                        #        )
-                        #    )
-                        #elif isinstance(param.type, c_ast.FuncDecl):
-                        #    blockItems[1].stmt.block_items[0].stmts.append(
-                        #        c_ast.Assignment(
-                        #            op='=',
-                        #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
-                        #            rvalue=c_ast.ID(name=param.name),
-                        #            coord=None
-                        #        )
-                        #    )
-    # Redirect function call
-    if entity.type.type.type.names[0] == 'void':
-        blockItems[1].stmt.block_items[1].stmts[0] = (c_ast.FuncCall(name=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='redirectFuncPtr')), args=c_ast.ExprList(exprs=[])))
+                        ), 
+                        args=c_ast.ExprList(exprs=[])
+                    )
+                )
+            )
+
+        blockItems[index].stmt.block_items[1].stmts.append(c_ast.Break(coord=None))
+
+        if entity.type.args != None:
+            if hasattr(entity.type.args, 'params'):
+                if entity.type.args.params != None:
+                    for param in entity.type.args.params:
+                        if param.name != None:
+                            if entity.type.type.type.names[0] == 'void':
+                                blockItems[index].stmt.block_items[1].stmts[0].args.exprs.append(c_ast.ID(name=param.name))
+                            else:
+                                blockItems[index].stmt.block_items[1].stmts[0].right.args.exprs.append(c_ast.ID(name=param.name))
+
+        if not isVoidType(entity.type.type):
+            blockItems.append(c_ast.Return(expr=c_ast.ID(name='returnValue'), coord=None))
+
+
+    ###############################################
+    #               TESTED FUNCTION               #
+    ###############################################
     else:
-        blockItems[1].stmt.block_items[1].stmts[0] = (c_ast.Return(c_ast.FuncCall(name=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='redirectFuncPtr')), args=c_ast.ExprList(exprs=[]))))
+        blockItems.append(c_ast.UnaryOp(op='p++', expr=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name ='callcount'))))
+        if isVoidType(entity.type.type):
+            blockItems.append(c_ast.FuncCall(name=c_ast.ID(name=entity.name), args=c_ast.ExprList(exprs=[])))
+        else:
+            blockItems.append(
+                c_ast.Return(
 
-    if entity.type.args != None:
-        if hasattr(entity.type.args, 'params'):
-            if entity.type.args.params != None:
-                for param in entity.type.args.params:
-                    if param.name != None:
-                        if entity.type.type.type.names[0] == 'void':
-                            blockItems[1].stmt.block_items[1].stmts[0].args.exprs.append(c_ast.ID(name=param.name))
-                        else:
-                            blockItems[1].stmt.block_items[1].stmts[0].expr.args.exprs.append(c_ast.ID(name=param.name))
-                        
+                    c_ast.FuncCall(name=c_ast.ID(name=entity.name), args=c_ast.ExprList(exprs=[]))
+                )
+            )
+        if entity.type.args != None:
+            if hasattr(entity.type.args, 'params'):
+                if entity.type.args.params != None:
+                    for param in entity.type.args.params:
+                        if param.name != None:
+                            if entity.type.type.type.names[0] == 'void':
+                                blockItems[1].args.exprs.append(c_ast.ID(name=param.name))
+                            else:
+                                blockItems[1].expr.args.exprs.append(c_ast.ID(name=param.name))
     return blockItems
-
-"""
-    This function creates the stub source file for the Unit Test
-
-    @param ast: AST of the source file to generate the stubs for
-    @param header_list: list of header files to include in the stub source file
-"""
+# create source file containing stubs
 def makeStubSource(ast, header_list):
     declList = getListofDecl(ast)
     funcDefList = getListofFuncDef(ast)
@@ -316,7 +451,7 @@ def makeStubSource(ast, header_list):
     for entity in funcDeclList:
         if isinstance(entity.type, c_ast.FuncDecl):
             funcDef = c_ast.FuncDef(decl=entity,param_decls=None,body=c_ast.Compound(block_items=[]))
-            funcDef.body.block_items = makeStubCompound(entity)
+            funcDef.body.block_items = makeStubCompound(entity, False)
             local_ast.ext.append(funcDef)
 
     funcDeclList = getListofFuncWithDefinition(declList, funcDefList)
@@ -341,7 +476,7 @@ def makeStubSource(ast, header_list):
                                                         coord=entity.coord),
                                     param_decls=None,
                                     body=c_ast.Compound(block_items=[]))
-            funcDef.body.block_items = makeStubCompound(entity)
+            funcDef.body.block_items = makeStubCompound(entity, True)
             local_ast.ext.append(funcDef)
     
 
@@ -355,13 +490,12 @@ def makeStubSource(ast, header_list):
 *\n\
 */\n")
     f.write("#include \"types.h\"\n")
+    f.write("#include \"stub.h\"\n")
     for header in header_list:
         f.write("#include \"" + header + "\"\n")
-    result = generator.visit(local_ast) 
     f.write(generator.visit(local_ast))
     f.close()
 
-# TODO: make a class for the stub generator
 
 # create the required header file
 def makeHeaderFile(name, ast):
@@ -498,23 +632,27 @@ def makeStubStruct(entity):
                                         )
                                 ]
                             ))))
-            struct.decls.append(c_ast.Decl( name = "redirectFuncPtr",
-                                            align=[],
-                                            bitsize=None,
-                                            coord=None,
-                                            funcspec=[],
-                                            init=None,
-                                            quals=[],
-                                            storage=[],
-                                            type=c_ast.PtrDecl( quals=[],
-                                                                type=c_ast.FuncDecl(    args=entity.type.args,
-                                                                                        type= c_ast.TypeDecl(   declname='redirectFuncPtr',
-                                                                                                                align=entity.type.type.align,
-                                                                                                                quals=entity.type.type.quals,
-                                                                                                                type=entity.type.type.type,
-                                                                                                                coord=entity.type.type.coord),
-                                                                                        coord=entity.coord),
-                                                                coord=None)))
+            struct.decls.append(c_ast.Decl( 
+                name = "redirectFuncPtr",
+                align=[],
+                bitsize=None,
+                coord=None,
+                funcspec=[],
+                init=None,
+                quals=[],
+                storage=[],
+                type=c_ast.PtrDecl( 
+                    quals=[],
+                    type=c_ast.FuncDecl(    
+                        args = entity.type.args,
+                        type = c_ast.TypeDecl(
+                            declname='redirectFuncPtr',
+                            align=entity.type.type.align,
+                            quals=entity.type.type.quals,
+                            type=entity.type.type.type,
+                            coord=entity.type.type.coord),
+                        coord=entity.coord),
+                    coord=None)))
             typedef.type.type = struct
             c_ast.PtrDecl(  quals=[],
                             type= entity.type,
@@ -523,6 +661,7 @@ def makeStubStruct(entity):
             typedef.type.type = struct
     return typedef
 
+# TODO: make a class for the stub generator
 
 # main entry point
 def main():
@@ -564,15 +703,13 @@ def main():
         f.write("#ifndef STUB_H\n")
         f.write("#define STUB_H\n")
         f.write("#include \"types.h\"\n")
-        for header in headerList:
-            f.write("#include \"" + header + "\"\n")
-
         funcDefList = getListofFuncDef(ast)
         unitFuncList = getListofFuncWithDefinition(declList, funcDefList)
         for entity in unitFuncList:
             entity.name = "TEST_CALL_" + entity.name
             entity.type.type.declname = "TEST_CALL_" + entity.type.type.declname
         generator = c_generator.CGenerator()
+        generator.indent_level = 4
         header_ast = c_ast.FileAST(unitFuncList)
         f.write(generator.visit(header_ast))
         f.write("#endif /* STUB_H */")

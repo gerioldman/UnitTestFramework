@@ -13,6 +13,9 @@
 #include "UnitTestAssert.h"
 #include "stub.h"
 
+static int fooC_userstub(int a, int b){
+    return a + 2 * b;
+}
 
 /**
  * @brief 
@@ -23,9 +26,11 @@ void TS1_TestCase1(void)
     int a = 1;
     int b = 2;
     int expected = 3;
-    int actual = TEST_CALL_UnitExample(a,b);
+    TEST_STUB.fooC.stub_option = STUB_OPTION_REDIRECT;
+    TEST_STUB.fooC.redirectFuncPtr = fooC_userstub;
+    int actual = TEST_CALL_UnitExample(a,&b);
     ASSERT_EQUAL(TEST_STUB.UnitExample.callcount, 1);
-    ASSERT_EQUAL(expected, actual);
+    ASSERT_EQUAL(actual, expected);
 }
 /**
  * @brief 
@@ -33,7 +38,7 @@ void TS1_TestCase1(void)
  */
 void TS1_TestCase2(void)
 {
-    //ASSERT_EQUAL(1, 1);
+    
 }
 
 /**
@@ -42,14 +47,12 @@ void TS1_TestCase2(void)
  */
 void TS1_TestCase3(void)
 {
-    //ASSERT_EQUAL(10, 0);
-    //ASSERT_EQUAL(0, 1);
-    //ASSERT_EQUAL(1, 2);
+    
 }
 
 
 TestSuite TestSuite1 = {
-    .name = "TestSuite1",
+    .name = "UnitExample",
     .TestCases =
     {
         {"TS1_TestCase1",TS1_TestCase1},

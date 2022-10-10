@@ -10,7 +10,6 @@ typedef struct
 {
   int a;
   int b;
-  float (*funcPtr)(int a, int b);
 } lib_t;
 typedef lib_t (*lib_fooA_t)(void);
 typedef struct 
@@ -23,8 +22,7 @@ typedef struct
 typedef enum 
 {
   STUB_OPTION_VALUE,
-  STUB_OPTION_REDIRECT,
-  STUB_OPTION_UNITCALL
+  STUB_OPTION_REDIRECT
 } stub_option_t;
 typedef enum 
 {
@@ -48,7 +46,9 @@ typedef struct
   unsigned long callcount;
   stub_option_t stub_option;
   int returnValue;
-  int (*redirectFuncPtr)();
+  int a;
+  int b;
+  int (*redirectFuncPtr)(int a, int b);
 } TEST_STUB_fooC_TYPE;
 typedef struct 
 {

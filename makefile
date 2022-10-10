@@ -26,7 +26,7 @@ LDLIBS  := -lm -lpdcurses
 .PHONY: all run coverage coverage-html clean stubgen check
 
 # Build the executable
-all: $(EXE)
+all:  stubgen $(EXE)
 
 # Check for dependencies
 check: 

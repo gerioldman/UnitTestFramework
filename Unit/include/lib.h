@@ -10,14 +10,13 @@ typedef enum{
 typedef struct {
     int a;
     int b;
-    float (*funcPtr)(int a, int b);
 } lib_t;
 
 typedef lib_t (*lib_fooA_t)(void);
 
 void fooA();
 void fooB(void);
-int fooC();
+int fooC(int a,int b);
 float fooD();
 lib_t fooE();
 

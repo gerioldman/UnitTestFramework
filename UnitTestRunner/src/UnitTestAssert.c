@@ -79,5 +79,5 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
 
 void AssertImplementation(boolean condition, char *message, char *file, int line)
 {
-    AssertPrint(condition, "%s:%d: %s\n", file, line, message);
+    AssertPrint(condition, "│ │ └─%s:%d: %s\n", file, line, message);
 }

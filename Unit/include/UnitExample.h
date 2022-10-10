@@ -11,8 +11,8 @@ typedef struct
     } fooA;
 } lib_t3;
 
-lib_fooA_t funcPtr;
-uint8_t variable;
+extern lib_fooA_t funcPtr;
+extern uint8_t variable;
 
 int UnitExample(int a, int *b);
 

@@ -26,15 +26,28 @@
         },
         {
             "label": "Run",
-            "command": "./bin/main.exe",
+            "command": ".\\bin\\main.exe",
             "type": "shell",
             "args": [
-                "-c",
+                "--colour",
                 "-a",
-                "--colour"
+                "-s"
             ],
             "problemMatcher": [
-                "$gcc"
+                {
+                    "owner": "UnitTest",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ],
+                    "pattern": {
+                        "regexp": "([^└─│ ]+):(\\d+):\\s+(warning|error|note):\\s+(.*)",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    }
+                }
             ],
             "presentation": {
                 
@@ -48,9 +61,9 @@
                 "revealProblems": "never",
                 "group": "test"
             },
-            "group": "build",
+            "group": "test",
             "dependsOn": [
-                "Build"
+                "All"
             ]
         },
         {

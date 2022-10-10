@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Run Stub Generation",
             "type": "python",
             "request": "launch",
             "program": "UnitTestSupport.py",
@@ -16,19 +16,19 @@
             "justMyCode": false
         },
         {
-            "name": "(gdb) Launch",
+            "name": "Run UnitTest",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/main.exe",
             "args": [
                 "-a",
                 "--colour",
-                "-m"
+                "-s"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
             "setupCommands": [

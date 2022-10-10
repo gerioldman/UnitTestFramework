@@ -22,10 +22,10 @@ void RunAllTests_Screen(void)
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        printf("Executing TestSuite: %s\n", testSuites[i]->name);
+        printf("├─Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            printf("│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
@@ -47,13 +47,13 @@ void RunAllTests_Curses(void)
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
         attron(COLOR_PAIR(3));
-        printw("Executing TestSuite: %s\n", testSuites[i]->name);
+        printw("├─Executing TestSuite: %s\n", testSuites[i]->name);
         attroff(COLOR_PAIR(3));
         refresh();
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
             attron(COLOR_PAIR(4));
-            printw("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            printw("│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             attroff(COLOR_PAIR(4));
             refresh();
             (testSuites[i])->TestCases[j].funct_ptr();
@@ -70,10 +70,10 @@ void RunAllTests_File(void)
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "├─Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
@@ -87,12 +87,12 @@ void RunAllTests_ScreenAndFile(void)
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        printf("Executing TestSuite: %s\n", testSuites[i]->name);
-        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
+        printf("├─Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "├─Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
-            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            printf("│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
