@@ -28,7 +28,7 @@ void TS1_TestCase1(void)
     int expected = 3;
     TEST_STUB.fooC.stub_option = STUB_OPTION_REDIRECT;
     TEST_STUB.fooC.redirectFuncPtr = fooC_userstub;
-    int actual = TEST_CALL_UnitExample(a,&b);
+    int actual = TEST_CALL_UnitExample(a,b);
     ASSERT_EQUAL(TEST_STUB.UnitExample.callcount, 1);
     ASSERT_EQUAL(actual, expected);
 }

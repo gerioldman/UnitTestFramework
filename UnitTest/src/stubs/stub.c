@@ -115,7 +115,70 @@ lib_t fooE()
   return returnValue;
 }
 
-int TEST_CALL_UnitExample(int a, int *b)
+void fooF(int array[5])
+{
+  TEST_STUB.fooF.callcount++;
+  switch (TEST_STUB.fooF.stub_option)
+  {
+    case STUB_OPTION_VALUE:
+      if (TEST_STUB.fooF.array.stub_pArg_option == STUB_OPTION_PARG_COPY_TO)
+    {
+      for (int i = 0; i < 5; ++i)
+      {
+        array[i] = TEST_STUB.fooF.array.value[i];
+      }
+
+    }
+    else
+    {
+      if (TEST_STUB.fooF.array.stub_pArg_option == STUB_OPTION_PARG_COPY_FROM)
+      {
+        for (int i = 0; i < 5; ++i)
+        {
+          TEST_STUB.fooF.array.value[i] = array[i];
+        }
+
+      }
+    }
+      break;
+
+    case STUB_OPTION_REDIRECT:
+      TEST_STUB.fooF.redirectFuncPtr(array);
+      break;
+
+    default:
+      break;
+
+  }
+
+}
+
+float fooZS(float a, float b, lib_t *(*foo)(void))
+{
+  float returnValue;
+  TEST_STUB.fooZS.callcount++;
+  switch (TEST_STUB.fooZS.stub_option)
+  {
+    case STUB_OPTION_VALUE:
+      returnValue = TEST_STUB.fooZS.returnValue;
+      TEST_STUB.fooZS.a = a;
+      TEST_STUB.fooZS.b = b;
+      TEST_STUB.fooZS.foo = foo;
+      break;
+
+    case STUB_OPTION_REDIRECT:
+      returnValue = TEST_STUB.fooZS.redirectFuncPtr(a, b, foo);
+      break;
+
+    default:
+      break;
+
+  }
+
+  return returnValue;
+}
+
+int TEST_CALL_UnitExample(int a, int b)
 {
   TEST_STUB.UnitExample.callcount++;
   return UnitExample(a, b);

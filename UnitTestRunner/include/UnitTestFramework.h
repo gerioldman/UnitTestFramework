@@ -13,7 +13,6 @@
 #define UNITTESTFRAMEWORK_H
 #include "TestSuites.h"
 #include <stdio.h>
-#include <curses.h>
 #include <stdlib.h>
 #include <string.h>
 #include "UnitTestAssert.h"

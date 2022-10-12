@@ -14,7 +14,7 @@ typedef struct
 extern lib_fooA_t funcPtr;
 extern uint8_t variable;
 
-int UnitExample(int a, int *b);
+int UnitExample(int a, int b);
 
 lib_t3 func(void);
 

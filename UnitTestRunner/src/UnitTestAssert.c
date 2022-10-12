@@ -10,13 +10,14 @@
  */
 
 #include "UnitTestAssert.h"
-#include "curses.h"
 #include <stdio.h>
 
-LogMode_Type LogMode = LOG_SCREEN;
 AssertMode_Type AssertMode = PRINT_FAILED_ASSERT;
+#if defined(__WIN64__) || defined(__WIN32__)
 ColourMode_Type ColourMode = NO_COLOUR;
+LogMode_Type LogMode = LOG_SCREEN;
 FILE *LogFile;
+#endif
 
 void AssertPrint(boolean condition, char *format, char *file, int line, char *message)
 {
@@ -38,9 +39,11 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
                     if(COLOUR == ColourMode) printf("\x1b[0m");
                 }
                 break;
+#if defined(__WIN64__) || defined(__WIN32__)
             case LOG_FILE:
                 fprintf(LogFile, format, file, line, message);
                 break;
+
             case LOG_SCREEN_AND_FILE:
                 if (TRUE == condition)
                 {
@@ -56,21 +59,7 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
                 }
                 fprintf(LogFile, format, file, line, message);
                 break;
-            case LOG_CURSES:
-                if (TRUE == condition)
-                {
-                    if(COLOUR == ColourMode) attron(COLOR_PAIR(1));
-                    printw(format, file, line, message);
-                    if(COLOUR == ColourMode) attroff(COLOR_PAIR(1));
-                }
-                else
-                {
-                    if(COLOUR == ColourMode) attron(COLOR_PAIR(2));
-                    printw( format, file, line, message);
-                    if(COLOUR == ColourMode) attroff(COLOR_PAIR(2));
-                }
-                refresh();
-                break;
+#endif
             default:
                 break;
         }

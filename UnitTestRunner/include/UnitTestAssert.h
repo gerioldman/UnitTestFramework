@@ -17,8 +17,7 @@
 typedef enum{
     LOG_SCREEN,
     LOG_FILE,
-    LOG_SCREEN_AND_FILE,
-    LOG_CURSES
+    LOG_SCREEN_AND_FILE
 }LogMode_Type;
 
 typedef enum{
@@ -51,7 +50,24 @@ typedef unsigned char   boolean;
         }
 
 #define ASSERT_NOT_EQUAL(expected, actual) \
-        AssertImplementation((expected) != (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__)
+        if(expected != actual) \
+        { \
+                AssertImplementation((expected) != (actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        } \
+        else \
+        { \
+                AssertImplementation((expected) != (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        }
+
+#define ASSERT_INTEGER_EQUAL(expected, actual) \
+        if(expected == actual) \
+        { \
+                AssertImplementation(((long long)expected) == ((long long)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        } \
+        else \
+        { \
+                AssertImplementation(((long long)expected) == ((long long)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+        }
 
 #define ASSERT_NULL(pointer) \
         AssertImplementation((pointer) == NULL,"error: (pointer:"#pointer")",__FILE__,__LINE__)

@@ -18,7 +18,7 @@ CFLAGS  := -g -Wall -MMD -fprofile-abs-path -I$(UNITESTRUNNERINCLUDE) -I$(UNITES
 PREFLAGS:= -I$(UNITINCLUDE) -DUNITTEST=1
 COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
-LDLIBS  := -lm -lpdcurses
+LDLIBS  := -lm
 
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
@@ -26,7 +26,7 @@ LDLIBS  := -lm -lpdcurses
 .PHONY: all run coverage coverage-html clean stubgen check
 
 # Build the executable
-all:  stubgen $(EXE)
+all: $(EXE)
 
 # Check for dependencies
 check: 
@@ -72,12 +72,12 @@ run: $(EXE)
 	$< ${TESTAPPARGS}
 
 # Run the executable with coverage analysis with summary on stdout
-coverage: clean run | $(COV)
+coverage: run | $(COV)
 	echo "# Running coverage analysis"
 	gcovr -r . -s
 
 # Run the executable with coverage analysis with html output
-coverage-html: clean run | $(COV)
+coverage-html: run | $(COV)
 	echo "# Running coverage analysis with html output"
 	gcovr -r . --html --html-details -o ${COV}/index.html
 
@@ -89,13 +89,14 @@ $(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
 # Generate the unit stubs
 preprocess: $(UNITPREPARE)
 
-stubgen: clean 
+stubgen:
 	echo # Generating unit stubs
 	$(PYTHON) $(UNITSTUBGEN) $(UNITSOURCE)
 
 # Clean the build
 clean:
 	echo "# Cleaning" 
-	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt $(UNITTESTSTUBINCLUDE)/*.h $(UNITTESTSTUBSRC)/*.c
+	$(RMDIR) $(OBJ) $(BIN) $(COV) $(PRE) *.txt  
+#$(UNITTESTSTUBINCLUDE)/*.h $(UNITTESTSTUBSRC)/*.c
 
 # End of makefile

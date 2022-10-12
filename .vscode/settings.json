@@ -11,7 +11,9 @@
         "unitexample.h": "c",
         "stdint.h": "c",
         "stdint-gcc.h": "c",
-        "template": "cpp"
+        "template": "cpp",
+        "type_traits": "c",
+        "stdarg.h": "c"
     },
     "gcovViewer.highlightMissedLines": true,
     "gcovViewer.buildDirectories": [

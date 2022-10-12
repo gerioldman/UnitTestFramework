@@ -68,14 +68,31 @@ typedef struct
 {
   unsigned long callcount;
   stub_option_t stub_option;
-  int returnValue;
-  int a;
   struct 
   {
-    int value;
+    int value[5];
     stub_pArg_option_t stub_pArg_option;
-  } b;
-  int (*redirectFuncPtr)(int a, int *b);
+  } array;
+  void (*redirectFuncPtr)(int array[5]);
+} TEST_STUB_fooF_TYPE;
+typedef struct 
+{
+  unsigned long callcount;
+  stub_option_t stub_option;
+  float returnValue;
+  float a;
+  float b;
+  lib_t *(*foo)(void);
+  float (*redirectFuncPtr)(float a, float b, lib_t *(*foo)(void));
+} TEST_STUB_fooZS_TYPE;
+typedef struct 
+{
+  unsigned long callcount;
+  stub_option_t stub_option;
+  int returnValue;
+  int a;
+  int b;
+  int (*redirectFuncPtr)(int a, int b);
 } TEST_STUB_UnitExample_TYPE;
 typedef struct 
 {
@@ -91,6 +108,8 @@ typedef struct
   TEST_STUB_fooC_TYPE fooC;
   TEST_STUB_fooD_TYPE fooD;
   TEST_STUB_fooE_TYPE fooE;
+  TEST_STUB_fooF_TYPE fooF;
+  TEST_STUB_fooZS_TYPE fooZS;
   TEST_STUB_UnitExample_TYPE UnitExample;
   TEST_STUB_func_TYPE func;
 } TEST_STUB_TYPE;

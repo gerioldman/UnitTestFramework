@@ -30,17 +30,9 @@ int main(int argc, char *argv[])
             {
                 ColourMode = COLOUR;
             }
-            else if (strcmp(argv[argi], "-m") == 0)
-            {
-                CursesMenu();
-            }
             else if (strcmp(argv[argi], "-s") == 0)
             {
                 RunAllTests_Screen();
-            }
-            else if (strcmp(argv[argi], "-c") == 0)
-            {
-                RunAllTests_Curses();
             }
             else if (strcmp(argv[argi], "-f") == 0)
             {
@@ -54,10 +46,8 @@ int main(int argc, char *argv[])
             {
                 printf("\x1b[1;31mRun Mode incorrect. Please specify a correct runmode.\x1b[0m\n\
                                 1. Log to screen:\t\t-s\n\
-                                2. Curses mode:\t\t-c\n\
                                 3. Log to file:\t\t-f\n\
-                                4. Log to file and screen:\t-fs\n\
-                                5. Curses menu:\t\t-m\n");
+                                4. Log to file and screen:\t-fs\n");
             }
             argi++;
         }
