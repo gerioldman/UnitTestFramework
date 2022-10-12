@@ -273,82 +273,210 @@ def makeStubCompound(entity, test_call):
                                     )
                                 )
                             elif isinstance(param.type, c_ast.PtrDecl):
-                                blockItems[index].stmt.block_items[0].stmts.append(
-                                    c_ast.If(
-                                    cond=c_ast.BinaryOp
-                                    (
-                                        op = '==',
-                                        left= c_ast.StructRef(
-                                            name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
-                                            type='.',
-                                            field= c_ast.ID(name = 'stub_pArg_option')),
-                                            right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
-                                            coord=None),
-                                            iftrue=c_ast.Compound(block_items=[
-                                                c_ast.Assignment(
-                                                    op='=',
-                                                    lvalue= c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name)),
-                                                    rvalue= c_ast.StructRef
-                                                    (
-                                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
-                                                        type='.',
-                                                        field= c_ast.ID(name = 'value')
-                                                    )
-                                                )
-                                            ]),
-                                            iffalse=c_ast.Compound(block_items=[
-                                                c_ast.If(
-                                                    cond=c_ast.BinaryOp(
-                                                        op='==',
-                                                        left = c_ast.StructRef
+                                if isinstance(param.type.type, c_ast.FuncDecl):
+                                    blockItems[index].stmt.block_items[0].stmts.append(
+                                        c_ast.Assignment(
+                                            op='=',
+                                            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
+                                            rvalue=c_ast.ID(name=param.name),
+                                            coord=None
+                                        )
+                                    )
+                                elif isinstance(param.type.type, c_ast.TypeDecl): 
+                                    blockItems[index].stmt.block_items[0].stmts.append(
+                                        c_ast.If(
+                                        cond=c_ast.BinaryOp
+                                        (
+                                            op = '==',
+                                            left= c_ast.StructRef(
+                                                name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                type='.',
+                                                field= c_ast.ID(name = 'stub_pArg_option')),
+                                                right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
+                                                coord=None),
+                                                iftrue=c_ast.Compound(block_items=[
+                                                    c_ast.Assignment(
+                                                        op='=',
+                                                        lvalue= c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name)),
+                                                        rvalue= c_ast.StructRef
                                                         (
                                                             name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
                                                             type='.',
-                                                            field= c_ast.ID(name = 'stub_pArg_option')
+                                                            field= c_ast.ID(name = 'value')
+                                                        )
+                                                    )
+                                                ]),
+                                                iffalse=c_ast.Compound(block_items=[
+                                                    c_ast.If(
+                                                        cond=c_ast.BinaryOp(
+                                                            op='==',
+                                                            left = c_ast.StructRef
+                                                            (
+                                                                name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                                type='.',
+                                                                field= c_ast.ID(name = 'stub_pArg_option')
+                                                            ),
+                                                            right = c_ast.ID(name='STUB_OPTION_PARG_COPY_FROM'),
+                                                            coord=None
                                                         ),
-                                                        right = c_ast.ID(name='STUB_OPTION_PARG_COPY_FROM'),
-                                                        coord=None
-                                                    ),
-                                                    iftrue=c_ast.Compound(
-                                                        block_items=[
-                                                            c_ast.Assignment(
-                                                                op='=',
-                                                                lvalue= c_ast.StructRef
-                                                                (
-                                                                    name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
-                                                                    type='.',
-                                                                    field= c_ast.ID(name = 'value')
-                                                                ),
-                                                                rvalue=c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name))
-                                                            )
-                                                        ]
-                                                    ),
-                                                    iffalse=None
-                                                )
-                                            ]),
-                                            coord=None
+                                                        iftrue=c_ast.Compound(
+                                                            block_items=[
+                                                                c_ast.Assignment(
+                                                                    op='=',
+                                                                    lvalue= c_ast.StructRef
+                                                                    (
+                                                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                                        type='.',
+                                                                        field= c_ast.ID(name = 'value')
+                                                                    ),
+                                                                    rvalue=c_ast.UnaryOp(op='*', expr=c_ast.ID(name=param.name))
+                                                                )
+                                                            ]
+                                                        ),
+                                                        iffalse=None
+                                                    )
+                                                ]),
+                                                coord=None
+                                        )
                                     )
+                            elif isinstance(param.type, c_ast.ArrayDecl):
+                                blockItems[index].stmt.block_items[0].stmts.append(
+                                        c_ast.If(
+                                        cond=c_ast.BinaryOp
+                                        (
+                                            op = '==',
+                                            left= c_ast.StructRef(
+                                                name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                type='.',
+                                                field= c_ast.ID(name = 'stub_pArg_option')),
+                                                right= c_ast.ID(name='STUB_OPTION_PARG_COPY_TO'),
+                                                coord=None),
+                                                iftrue=c_ast.Compound(block_items=[
+                                                    c_ast.For(
+                                                        init=c_ast.Decl(
+                                                                name='i',
+                                                                quals=[],
+                                                                align=None,
+                                                                storage=[],
+                                                                funcspec=[],
+                                                                type=c_ast.TypeDecl(
+                                                                    declname='i',
+                                                                    quals=[],
+                                                                    align=None,
+                                                                    type=c_ast.IdentifierType(names=['int']),
+                                                                    coord=None
+                                                                ),
+                                                                init=c_ast.Constant(type='int', value='0'),
+                                                                bitsize=None,
+                                                                coord=None
+                                                        ),
+                                                        cond=c_ast.BinaryOp(
+                                                            op='<',
+                                                            left=c_ast.ID(name='i'),
+                                                            right=c_ast.Constant(type='int', value=str(param.type.dim.value))
+                                                        ),
+                                                        next=c_ast.UnaryOp(
+                                                            op='++',
+                                                            expr=c_ast.ID(name='i'),
+                                                            coord=None
+                                                        ),
+                                                        stmt=c_ast.Compound(
+                                                            block_items=[
+                                                                c_ast.Assignment(
+                                                                    op='=',
+                                                                    lvalue=c_ast.ArrayRef(
+                                                                        name=c_ast.ID(name=param.name),
+                                                                        subscript=c_ast.ID(name='i')
+                                                                    ),
+                                                                    rvalue=c_ast.ArrayRef(
+                                                                        name=c_ast.StructRef(
+                                                                            name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),
+                                                                            type='.',
+                                                                            field= c_ast.ID(name = 'value')
+                                                                        ),
+                                                                        subscript=c_ast.ID(name='i'),
+                                                                        coord=None
+                                                                    ),
+                                                                    coord=None
+                                                                )
+                                                            ]
+                                                        )
+                                                    )
+                                                ]),
+                                                iffalse=c_ast.Compound(block_items=[
+                                                    c_ast.If(
+                                                        cond=c_ast.BinaryOp(
+                                                            op='==',
+                                                            left = c_ast.StructRef
+                                                            (
+                                                                name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),  # c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name))
+                                                                type='.',
+                                                                field= c_ast.ID(name = 'stub_pArg_option')
+                                                            ),
+                                                            right = c_ast.ID(name='STUB_OPTION_PARG_COPY_FROM'),
+                                                            coord=None
+                                                        ),
+                                                        iftrue=c_ast.Compound(
+                                                            block_items=[
+                                                                c_ast.For(
+                                                                    init=c_ast.Decl(
+                                                                        name='i',
+                                                                        quals=[],
+                                                                        align=None,
+                                                                        storage=[],
+                                                                        funcspec=[],
+                                                                        type=c_ast.TypeDecl(
+                                                                            declname='i',
+                                                                            quals=[],
+                                                                            align=None,
+                                                                            type=c_ast.IdentifierType(names=['int']),
+                                                                            coord=None
+                                                                        ),
+                                                                        init=c_ast.Constant(type='int', value='0'),
+                                                                        bitsize=None,
+                                                                        coord=None
+                                                                    ),
+                                                                    cond=c_ast.BinaryOp(
+                                                                        op='<',
+                                                                        left=c_ast.ID(name='i'),
+                                                                        right=c_ast.Constant(type='int', value=str(param.type.dim.value))
+                                                                    ),
+                                                                    next=c_ast.UnaryOp(
+                                                                        op='++',
+                                                                        expr=c_ast.ID(name='i'),
+                                                                        coord=None
+                                                                    ),
+                                                                    stmt=c_ast.Compound(
+                                                                        block_items=[
+                                                                            c_ast.Assignment(
+                                                                                op='=',
+                                                                                lvalue=c_ast.ArrayRef(
+                                                                                    name=c_ast.StructRef(
+                                                                                        name= c_ast.StructRef( name = c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type= '.' , field= c_ast.ID(param.name)),
+                                                                                        type='.',
+                                                                                        field= c_ast.ID(name = 'value')
+                                                                                    ),
+                                                                                    subscript=c_ast.ID(name='i'),
+                                                                                    coord=None
+                                                                                ),
+                                                                                rvalue=c_ast.ArrayRef(
+                                                                                    name=c_ast.ID(name=param.name),
+                                                                                    subscript=c_ast.ID(name='i')
+                                                                                ),
+                                                                                coord=None
+                                                                            )
+                                                                        ]
+                                                                    )
+                                                                )
+                                                            ]
+                                                        ),
+                                                        iffalse=None
+                                                    )
+                                                ]),
+                                                coord=None
+                                        )
+                                        
                                 )
-                                #blockItems[index].stmt.block_items[0].stmts.append(
-
-                            #elif isinstance(param.type, c_ast.ArrayDecl):
-                            #    blockItems[1].stmt.block_items[0].stmts.append(
-                            #        c_ast.Assignment(
-                            #            op='=',
-                            #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
-                            #            rvalue=c_ast.ID(name=param.name),
-                            #            coord=None
-                            #        )
-                            #    )
-                            #elif isinstance(param.type, c_ast.FuncDecl):
-                            #    blockItems[1].stmt.block_items[0].stmts.append(
-                            #        c_ast.Assignment(
-                            #            op='=',
-                            #            lvalue=c_ast.StructRef(name= c_ast.StructRef( name = c_ast.ID(name='TEST_STUB'), type= '.' , field= c_ast.ID(entity.name)), type='.',field= c_ast.ID(name =param.name)),
-                            #            rvalue=c_ast.ID(name=param.name),
-                            #            coord=None
-                            #        )
-                            #    )
 
         blockItems[index].stmt.block_items[0].stmts.append(c_ast.Break(coord=None))
 
@@ -429,6 +557,7 @@ def makeStubCompound(entity, test_call):
                             else:
                                 blockItems[1].expr.args.exprs.append(c_ast.ID(name=param.name))
     return blockItems
+
 # create source file containing stubs
 def makeStubSource(ast, header_list):
     declList = getListofDecl(ast)
@@ -495,7 +624,6 @@ def makeStubSource(ast, header_list):
         f.write("#include \"" + header + "\"\n")
     f.write(generator.visit(local_ast))
     f.close()
-
 
 # create the required header file
 def makeHeaderFile(name, ast):
@@ -572,66 +700,129 @@ def makeStubStruct(entity):
                                                 bitsize=None))
             if entity.type.args != None:
                 for arg in entity.type.args.params:
-                    # Stub from non pointer type
-                    if isinstance(arg.type.type, c_ast.IdentifierType):
+                    if isinstance(arg.type, c_ast.TypeDecl):
                         if arg.type.type.names[0] != 'void':
                             struct.decls.append(arg)
-                    # Stub from Pointer type
-                    elif isinstance(arg.type.type.type, c_ast.IdentifierType):
-                        if arg.type.type.type.names[0] != 'void':
+                    elif isinstance(arg.type, c_ast.PtrDecl):
+                        if isinstance(arg.type.type,c_ast.TypeDecl):
                             struct.decls.append(c_ast.Decl(
-                                align=[],
-                                bitsize=None,
-                                coord=None,
-                                funcspec=[],
-                                init=None,
-                                name=arg.name,
-                                quals=[],
-                                storage=[],
-                                type = c_ast.TypeDecl(
-                                    align=None,
+                                    align=[],
+                                    bitsize=None,
                                     coord=None,
-                                    declname=arg.type.type.declname,
+                                    funcspec=[],
+                                    init=None,
+                                    name=arg.name,
                                     quals=[],
-                                    type= c_ast.Struct(
-                                    name=None,
-                                    decls=[
-                                        c_ast.Decl(
-                                            name='value',
-                                            quals=arg.quals,
-                                            align=arg.align,
-                                            storage=arg.storage,
-                                            funcspec = arg.funcspec,
-                                            type = c_ast.TypeDecl(
-                                                quals=arg.type.type.quals,
-                                                align=arg.type.type.align,
-                                                type=arg.type.type.type,
-                                                coord=arg.type.type.coord,
-                                                declname= 'value'),
-                                            init=arg.init,
-                                            bitsize=arg.bitsize
-                                        ),
-                                        c_ast.Decl(
-                                            name='stub_pArg_option',
-                                            align=[],
-                                            bitsize= None,
-                                            coord= None,
-                                            funcspec= [],
-                                            init= None,
-                                            quals= [],
-                                            storage= [],
-                                            type= c_ast.TypeDecl(
-                                                align= None,
+                                    storage=[],
+                                    type = c_ast.TypeDecl(
+                                        align=None,
+                                        coord=None,
+                                        declname=arg.type.type.declname,
+                                        quals=[],
+                                        type= c_ast.Struct(
+                                        name=None,
+                                        decls=[
+                                            c_ast.Decl(
+                                                name='value',
+                                                quals=arg.quals,
+                                                align=arg.align,
+                                                storage=arg.storage,
+                                                funcspec = arg.funcspec,
+                                                type = c_ast.TypeDecl(
+                                                    quals=arg.type.type.quals,
+                                                    align=arg.type.type.align,
+                                                    type=arg.type.type.type,
+                                                    coord=arg.type.type.coord,
+                                                    declname= 'value'),
+                                                init=arg.init,
+                                                bitsize=arg.bitsize
+                                            ),
+                                            c_ast.Decl(
+                                                name='stub_pArg_option',
+                                                align=[],
+                                                bitsize= None,
                                                 coord= None,
-                                                declname= 'stub_pArg_option',
+                                                funcspec= [],
+                                                init= None,
                                                 quals= [],
-                                                type= c_ast.IdentifierType(
-                                                    names= ['stub_pArg_option_t']
+                                                storage= [],
+                                                type= c_ast.TypeDecl(
+                                                    align= None,
+                                                    coord= None,
+                                                    declname= 'stub_pArg_option',
+                                                    quals= [],
+                                                    type= c_ast.IdentifierType(
+                                                        names= ['stub_pArg_option_t']
+                                                    )
                                                 )
                                             )
-                                        )
-                                ]
+                                    ]
                             ))))
+                        elif isinstance(arg.type.type, c_ast.FuncDecl):
+                            struct.decls.append(arg)
+                    elif isinstance(arg.type, c_ast.ArrayDecl):
+                        struct.decls.append(c_ast.Decl(
+                                    align=[],
+                                    bitsize=None,
+                                    coord=None,
+                                    funcspec=[],
+                                    init=None,
+                                    name=arg.name,
+                                    quals=[],
+                                    storage=[],
+                                    type = c_ast.TypeDecl(
+                                        align=None,
+                                        coord=None,
+                                        declname=arg.type.type.declname,
+                                        quals=[],
+                                        type= c_ast.Struct(
+                                        name=None,
+                                        decls=[
+                                            c_ast.Decl(
+                                                name='value',
+                                                quals=arg.quals,
+                                                align=arg.align,
+                                                storage=arg.storage,
+                                                funcspec = arg.funcspec,
+                                                type = c_ast.ArrayDecl(
+                                                    type=c_ast.TypeDecl(
+                                                        declname='value',
+                                                        quals=arg.type.type.quals,
+                                                        align=arg.type.type.align,
+                                                        type=arg.type.type.type,
+                                                        coord=arg.type.type.coord
+                                                    ),
+                                                    dim=arg.type.dim,
+                                                    coord=arg.type.coord,
+                                                    dim_quals=arg.type.dim_quals
+                                                ),
+                                                init=arg.init,
+                                                bitsize=arg.bitsize
+                                            ),
+                                            c_ast.Decl(
+                                                name='stub_pArg_option',
+                                                align=[],
+                                                bitsize= None,
+                                                coord= None,
+                                                funcspec= [],
+                                                init= None,
+                                                quals= [],
+                                                storage= [],
+                                                type= c_ast.TypeDecl(
+                                                    align= None,
+                                                    coord= None,
+                                                    declname= 'stub_pArg_option',
+                                                    quals= [],
+                                                    type= c_ast.IdentifierType(
+                                                        names= ['stub_pArg_option_t']
+                                                    )
+                                                )
+                                            )
+                                    ]
+                            ))))
+                        #struct.decls.append(arg)
+                    else:
+                        print("ERROR: Unknown type in function declaration")
             struct.decls.append(c_ast.Decl( 
                 name = "redirectFuncPtr",
                 align=[],
@@ -660,8 +851,6 @@ def makeStubStruct(entity):
             
             typedef.type.type = struct
     return typedef
-
-# TODO: make a class for the stub generator
 
 # main entry point
 def main():
