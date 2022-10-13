@@ -20,13 +20,13 @@ COVFLAGS:= -fprofile-arcs -ftest-coverage
 LDFLAGS := -lgcov --coverage -L$(LIB)
 LDLIBS  := -lm
 
+TESTAPPARGS ?= --colour -a -s
+
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
 
 .PHONY: all run coverage coverage-html clean stubgen check
 
-# Build the executable
-all: $(EXE)
 
 # Check for dependencies
 check: 
@@ -36,6 +36,9 @@ check:
 	$(PYTHON) --version
 	echo "# Check for gcovr:"
 	gcovr --version
+
+# Build the executable
+all: $(EXE)
 
 # Link the executable
 $(EXE): $(UNITTESTRUNNEROBJS) $(UNITTESTOBJS) $(UNITTESTSTUBOBJS) $(UNITOBJS) | $(BIN)
@@ -60,7 +63,11 @@ $(UNITOBJS): $(OBJ)/%.o: $(UNITSRC)/%.c | $(OBJ)
 $(UNITTESTSTUBOBJS): $(OBJ)/%.o: $(UNITTESTSTUBSRC)/%.c | $(OBJ)
 	echo "# Compiling $<"
 	$(CC) $(CFLAGS) -c $< -o $@
-	
+
+# Create the stubs for the UnitTest	
+stubgen:
+	echo # Generating unit stubs
+	$(PYTHON) $(UNITSTUBGEN) $(UNITSOURCE)
 
 # Create needed directories
 $(BIN) $(OBJ) $(COV) $(PRE):
@@ -82,16 +89,13 @@ coverage-html: run | $(COV)
 	gcovr -r . --html --html-details -o ${COV}/index.html
 
 # Preprocess the source files for automatic unit stub generation
-$(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
-	echo "# Preprocessing $<"
-	$(CC) $(PREFLAGS) -E $< -o $@
+#$(UNITPREPARE): $(PRE)/%.i: $(UNITSRC)/%.c | $(PRE)
+#	echo "# Preprocessing $<"
+#	$(CC) $(PREFLAGS) -E $< -o $@
 
 # Generate the unit stubs
-preprocess: $(UNITPREPARE)
+# preprocess: $(UNITPREPARE)
 
-stubgen:
-	echo # Generating unit stubs
-	$(PYTHON) $(UNITSTUBGEN) $(UNITSOURCE)
 
 # Clean the build
 clean:
