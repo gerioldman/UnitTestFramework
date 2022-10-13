@@ -11,6 +11,24 @@
 
 #include "UnitTestFramework.h"
 
+volatile const char *testHeader = 
+" ________  _____ ______   ________  ___  __    ___  __    ________\n\
+|\\   ____\\|\\   _ \\  _   \\|\\   __  \\|\\  \\|\\  \\ |\\  \\|\\  \\ |\\   __  \\\n\
+\\ \\  \\___|\\ \\  \\\\\\__\\ \\  \\ \\  \\|\\  \\ \\  \\/  /|\\ \\  \\/  /|\\ \\  \\|\\  \\\n\
+ \\ \\  \\    \\ \\  \\\\|__| \\  \\ \\  \\\\\\  \\ \\   ___  \\ \\   ___  \\ \\   __  \\\n\
+  \\ \\  \\____\\ \\  \\    \\ \\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\ \\  \\\\ \\  \\ \\  \\ \\  \\\n\
+   \\ \\_______\\ \\__\\    \\ \\__\\ \\_______\\ \\__\\\\ \\__\\ \\__\\\\ \\__\\ \\__\\ \\__\\\n\
+    \\|_______|\\|__|     \\|__|\\|_______|\\|__| \\|__|\\|__| \\|__|\\|__|\\|__|\n\
+\n\
+Open source unit test framework for embedded systems\n";
+
+
+void printfTestHeader(void)
+{   
+    printf("\x1b[38;5;130m");
+    printf("%s", testHeader);
+    printf("\x1b[0m");
+}
 
 /**
  * @brief
@@ -20,12 +38,15 @@ void RunAllTests_Screen(void)
 {
     LogMode = LOG_SCREEN;
     // Run all tests
+
+    printfTestHeader();
+
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        printf("├─Executing TestSuite: %s\n", testSuites[i]->name);
+        printf("Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            printf("│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
@@ -34,15 +55,16 @@ void RunAllTests_Screen(void)
 
 void RunAllTests_File(void)
 {
+
     LogMode = LOG_FILE;
     LogFile = fopen("test.txt", "w");
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        fprintf(LogFile, "├─Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            fprintf(LogFile, "│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }
@@ -50,18 +72,21 @@ void RunAllTests_File(void)
 }
 
 void RunAllTests_ScreenAndFile(void)
-{
+{                                                                      
+    printfTestHeader();
+
     LogMode = LOG_SCREEN_AND_FILE;
     LogFile = fopen("test.txt", "w");
     // Run all tests
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
-        printf("├─Executing TestSuite: %s\n", testSuites[i]->name);
-        fprintf(LogFile, "├─Executing TestSuite: %s\n", testSuites[i]->name);
+        printf("Executing TestSuite: %s\n", testSuites[i]->name);
+        fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            printf("│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
-            fprintf(LogFile, "│ ├─Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            
+            printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
+            fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
         }
     }

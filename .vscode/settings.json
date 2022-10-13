@@ -13,11 +13,35 @@
         "stdint-gcc.h": "c",
         "template": "cpp",
         "type_traits": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "unittestframework.h": "c"
     },
     "gcovViewer.highlightMissedLines": true,
     "gcovViewer.buildDirectories": [
         "c:\\Users\\kgerg\\Desktop\\Egyetem\\7.felev\\UnitTestFramework\\obj"
     ],
-    "taskExplorer.pathToMake": "make"
+    "taskExplorer.pathToMake": "make",
+    "taskExplorer.exclude": [
+        "**/.vscode-test/**",
+        "**/bin/**",
+        "**/build/**",
+        "**/CompiledOutput/**",
+        "**/dist/**",
+        "**/doc/**",
+        "**/ext/**",
+        "**/out/**",
+        "**/output/**",
+        "**/packages/**",
+        "**/release/**",
+        "**/releases/**",
+        "**/samples/**",
+        "**/sdks/**",
+        "**/static/**",
+        "**/target/**",
+        "**/test/**",
+        "**/third_party/**",
+        "**/vendor/**",
+        "**/work/**",
+        "/c:/Users/kgerg/Desktop/Egyetem/7.felev/UnitTestFramework/.vscode/tasks.json"
+    ]
 }

@@ -10,14 +10,45 @@
  */
 
 #include "UnitTestAssert.h"
-#include <stdio.h>
 
+// Global variables
 AssertMode_Type AssertMode = PRINT_FAILED_ASSERT;
-#if defined(__WIN64__) || defined(__WIN32__)
 ColourMode_Type ColourMode = NO_COLOUR;
 LogMode_Type LogMode = LOG_SCREEN;
+#if defined(__WIN64__) || defined(__WIN32__)
 FILE *LogFile;
 #endif
+
+void SetModifier(ModifierCode modifier)
+{
+    if (ColourMode == COLOUR)
+    {
+        printf("\x1b[%dm", modifier);
+    }
+}
+
+void SetForegroundColour(ForegroundColourCode colour)
+{
+    if (ColourMode == COLOUR)
+    {
+        printf("\x1b[%dm", colour);
+    }
+}
+void SetBackgroundColour(BackgroundColourCode colour)
+{
+    if (ColourMode == COLOUR)
+    {
+        printf("\x1b[%dm", colour);
+    }
+}
+
+void ResetColour(void)
+{
+    if (ColourMode == COLOUR)
+    {
+        printf("\x1b[0m");
+    }
+}
 
 void AssertPrint(boolean condition, char *format, char *file, int line, char *message)
 {
@@ -26,17 +57,19 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
         switch (LogMode)
         {
             case LOG_SCREEN:
-                if (TRUE == condition)
+                if (condition)
                 {
-                    if(COLOUR == ColourMode) printf("\x1b[1;32m");
+                    SetModifier(BOLD);
+                    SetForegroundColour(BG_BRIGHTGREEN);
                     printf_s(format, file, line, message);
-                    if(COLOUR == ColourMode) printf("\x1b[0m");
+                    ResetColour();
                 }
                 else
                 {
-                    if(COLOUR == ColourMode) printf("\x1b[1;31m");
+                    SetModifier(BOLD);
+                    SetForegroundColour(BG_BRIGHTRED);
                     printf_s(format, file, line, message);
-                    if(COLOUR == ColourMode) printf("\x1b[0m");
+                    ResetColour();
                 }
                 break;
 #if defined(__WIN64__) || defined(__WIN32__)
@@ -45,17 +78,19 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
                 break;
 
             case LOG_SCREEN_AND_FILE:
-                if (TRUE == condition)
+                if (condition)
                 {
-                    if(COLOUR == ColourMode) printf("\x1b[1;32m");
+                    SetModifier(BOLD);
+                    SetForegroundColour(BG_BRIGHTGREEN);
                     printf_s(format, file, line, message);
-                    if(COLOUR == ColourMode) printf("\x1b[0m");
+                    ResetColour();
                 }
                 else
                 {
-                    if(COLOUR == ColourMode) printf("\x1b[1;31m");
+                    SetModifier(BOLD);
+                    SetForegroundColour(BG_BRIGHTRED);
                     printf_s(format, file, line, message);
-                    if(COLOUR == ColourMode) printf("\x1b[0m");
+                    ResetColour();
                 }
                 fprintf(LogFile, format, file, line, message);
                 break;
@@ -68,5 +103,5 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
 
 void AssertImplementation(boolean condition, char *message, char *file, int line)
 {
-    AssertPrint(condition, "│ │ └─%s:%d: %s\n", file, line, message);
+    AssertPrint(condition, "%s:%d: %s\n", file, line, message);
 }
