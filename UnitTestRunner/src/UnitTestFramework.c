@@ -72,22 +72,26 @@ void RunAllTests_File(void)
 }
 
 void RunAllTests_ScreenAndFile(void)
-{                                                                      
-    printfTestHeader();
-
+{                      
+    // Set log mode to screen and file                                                
     LogMode = LOG_SCREEN_AND_FILE;
+    // Open file
     LogFile = fopen("test.txt", "w");
-    // Run all tests
+    // Print header
+    printfTestHeader();
+    // Run through all test suites
     for (int i = 0; testSuites[i] != TEST_SUITE_END; i++)
     {
+        // Print test suite name
         printf("Executing TestSuite: %s\n", testSuites[i]->name);
         fprintf(LogFile, "Executing TestSuite: %s\n", testSuites[i]->name);
         for (int j = 0; (testSuites[i])->TestCases[j].funct_ptr != TEST_CASE_END; j++)
         {
-            
+            testSuites[i]->cleanUpAfter_funcPtr();   
             printf("Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             fprintf(LogFile, "Executing TestCase: %s\n", (testSuites[i])->TestCases[j].name);
             (testSuites[i])->TestCases[j].funct_ptr();
+            testSuites[i]->cleanUpAfter_funcPtr();
         }
     }
     fclose(LogFile);

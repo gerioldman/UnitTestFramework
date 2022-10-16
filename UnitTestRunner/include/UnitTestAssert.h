@@ -96,108 +96,210 @@ typedef unsigned char   boolean;
 #define TRUE            1
 #define FALSE           0
 
-#define ASSERT_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_INT8_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation((expected) == (actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int8_t)expected) == ((int8_t)actual),"note: Actual:("#actual": %d) was (Expected: %d)",__FILE__,__LINE__,2,((int8_t)expected),((int8_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation((expected) == (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int8_t)expected) == ((int8_t)actual),"error: Actual:("#actual": %d) was not (Expected: %d)",__FILE__,__LINE__,2,((int8_t)expected),((int8_t)actual)); \
         }
 
-#define ASSERT_NOT_EQUAL(expected, actual) \
-        if(expected != actual) \
-        { \
-                AssertImplementation((expected) != (actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
-        } \
-        else \
-        { \
-                AssertImplementation((expected) != (actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
-        }
-
-#define ASSERT_INT8_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_INT16_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((int8_t)expected) == ((int8_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int16_t)expected) == ((int16_t)actual),"note: Actual:("#actual": %d) was (Expected: %d)",__FILE__,__LINE__,2,((int16_t)expected),((int16_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((int8_t)expected) == ((int8_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int16_t)expected) == ((int16_t)actual),"error: Actual:("#actual": %d) was not (Expected: %d)",__FILE__,__LINE__,2,((int16_t)expected),((int16_t)actual)); \
         }
 
-#define ASSERT_INT16_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_INT32_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((int16_t)expected) == ((int16_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int32_t)expected) == ((int32_t)actual),"note: Actual:("#actual": %ld) was (Expected: %ld)",__FILE__,__LINE__,2,((int32_t)expected),((int32_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((int16_t)expected) == ((int16_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int32_t)expected) == ((int32_t)actual),"error: Actual:("#actual": %ld) was not (Expected: %ld)",__FILE__,__LINE__,2,((int32_t)expected),((int32_t)actual)); \
         }
 
-#define ASSERT_INT32_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_INT64_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((int32_t)expected) == ((int32_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int64_t)expected) == ((int64_t)actual),"note: Actual:("#actual": %lld) was (Expected: %lld)",__FILE__,__LINE__,2,((int64_t)expected),((int64_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((int32_t)expected) == ((int32_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((int64_t)expected) == ((int64_t)actual),"error: Actual:("#actual": %lld) was not (Expected: %lld)",__FILE__,__LINE__,2,((int64_t)expected),((int64_t)actual)); \
         }
 
-#define ASSERT_INT64_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_UINT8_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((int64_t)expected) == ((int64_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint8_t)expected) == ((uint8_t)actual),"note: Actual:("#actual": %u) was (Expected: %u)",__FILE__,__LINE__,2,((uint8_t)expected),((uint8_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((int64_t)expected) == ((int64_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint8_t)expected) == ((uint8_t)actual),"error: Actual:("#actual": %u) was not (Expected: %u)",__FILE__,__LINE__,2,((uint8_t)expected),((uint8_t)actual)); \
         }
 
-#define ASSERT_UINT8_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_UINT16_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((uint8_t)expected) == ((uint8_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint16_t)expected) == ((uint16_t)actual),"note: Actual:("#actual": %u) was (Expected: %u)",__FILE__,__LINE__,2,((uint16_t)expected),((uint16_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((uint8_t)expected) == ((uint8_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint16_t)expected) == ((uint16_t)actual),"error: Actual:("#actual": %u) was not (Expected: %u)",__FILE__,__LINE__,2,((uint16_t)expected),((uint16_t)actual)); \
         }
 
-#define ASSERT_UINT16_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_UINT32_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((uint16_t)expected) == ((uint16_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint32_t)expected) == ((uint32_t)actual),"note: Actual:("#actual": %lu) was (Expected: %lu)",__FILE__,__LINE__,2,((uint32_t)expected),((uint32_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((uint16_t)expected) == ((uint16_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint32_t)expected) == ((uint32_t)actual),"error: Actual:("#actual": %lu) was not (Expected: %lu)",__FILE__,__LINE__,2,((uint32_t)expected),((uint32_t)actual)); \
         }
 
-#define ASSERT_UINT32_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_UINT64_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((uint32_t)expected) == ((uint32_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint64_t)expected) == ((uint64_t)actual),"note: Actual:("#actual": %llu) was (Expected: %llu)",__FILE__,__LINE__,2,((uint64_t)expected),((uint64_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((uint32_t)expected) == ((uint32_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint64_t)expected) == ((uint64_t)actual),"error: Actual:("#actual": %llu) was not (Expected: %llu)",__FILE__,__LINE__,2,((uint64_t)expected),((uint64_t)actual)); \
         }
 
-#define ASSERT_UINT64_EQUAL(expected, actual) \
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_HEX8_EQUAL(actual, expected) \
         if(expected == actual) \
         { \
-                AssertImplementation(((uint64_t)expected) == ((uint64_t)actual),"note: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint8_t)expected) == ((uint8_t)actual),"note: Actual:("#actual": 0x%02X) was (Expected: 0x%02X)",__FILE__,__LINE__,2,((uint8_t)expected),((uint8_t)actual)); \
         } \
         else \
         { \
-                AssertImplementation(((uint64_t)expected) == ((uint64_t)actual),"error: (expected:"#expected", actual:"#actual")",__FILE__,__LINE__); \
+                AssertImplementationWithFormat(((uint8_t)expected) == ((uint8_t)actual),"error: Actual:("#actual": 0x%02X) was not (Expected: 0x%02X)",__FILE__,__LINE__,2,((uint8_t)expected),((uint8_t)actual)); \
         }
 
-void AssertImplementation(boolean condition, char* message, char* file, int line);
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_HEX16_EQUAL(actual, expected) \
+        if(expected == actual) \
+        { \
+                AssertImplementationWithFormat(((uint16_t)expected) == ((uint16_t)actual),"note: Actual:("#actual": 0x%04X) was (Expected: 0x%04X)",__FILE__,__LINE__,2,((uint16_t)expected),((uint16_t)actual)); \
+        } \
+        else \
+        { \
+                AssertImplementationWithFormat(((uint16_t)expected) == ((uint16_t)actual),"error: Actual:("#actual": 0x%04X) was not (Expected: 0x%04X)",__FILE__,__LINE__,2,((uint16_t)expected),((uint16_t)actual)); \
+        }
 
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_HEX32_EQUAL(actual, expected) \
+        if(expected == actual) \
+        { \
+                AssertImplementationWithFormat(((uint32_t)expected) == ((uint32_t)actual),"note: Actual:("#actual": 0x%08X) was (Expected: 0x%08X)",__FILE__,__LINE__,2,((uint32_t)expected),((uint32_t)actual)); \
+        } \
+        else \
+        { \
+                AssertImplementationWithFormat(((uint32_t)expected) == ((uint32_t)actual),"error: Actual:("#actual": 0x%08X) was not (Expected: 0x%08X)",__FILE__,__LINE__,2,((uint32_t)expected),((uint32_t)actual)); \
+        }
+
+/**
+ * @brief 
+ * 
+ * @param actual 
+ * @param expected 
+ */
+#define ASSERT_HEX64_EQUAL(actual, expected) \
+        if(expected == actual) \
+        { \
+                AssertImplementationWithFormat(((uint64_t)expected) == ((uint64_t)actual),"note: Actual:("#actual": 0x%016X) was (Expected: 0x%016X)",__FILE__,__LINE__,2,((uint64_t)expected),((uint64_t)actual)); \
+        } \
+        else \
+        { \
+                AssertImplementationWithFormat(((uint64_t)expected) == ((uint64_t)actual),"error: Actual:("#actual": 0x%016X) was not (Expected: 0x%016X)",__FILE__,__LINE__,2,((uint64_t)expected),((uint64_t)actual)); \
+        }
+
+#define ASSERT_FLOAT(actual, expected, tolerance) \
+        if(((((float)expected - (float)tolerance) <= ((float)actual)) && (((float)actual) <= (((float)expected) + ((float)tolerance))))) \
+        { \
+                AssertImplementationWithFormat(((((float)expected - (float)tolerance) <= ((float)actual)) && (((float)actual) <= (((float)expected) + ((float)tolerance)))),"note: Actual:("#actual": %f) was within tolerance (Expected: [ %f , %f ])",__FILE__,__LINE__,3,((float)actual),(((float)expected) - ((float) tolerance)),(((float)expected) + ((float) tolerance))); \
+        } \
+        else \
+        { \
+                AssertImplementationWithFormat(((((float)expected - (float)tolerance) <= ((float)actual)) && (((float)actual) <= (((float)expected) + ((float)tolerance)))),"note: Actual:("#actual": %f) was not within tolerance (Expected: [ %f , %f ])",__FILE__,__LINE__,3,((float)actual),(((float)expected) - ((float) tolerance)),(((float)expected) + ((float) tolerance))); \
+        }
+
+
+void AssertImplementationWithFormat(boolean condition, char *format, char *file, int line,int argc, ...);
 void SetModifier(ModifierCode modifier);
 void SetForegroundColour(ForegroundColourCode colour);
 void SetBackgroundColour(BackgroundColourCode colour);

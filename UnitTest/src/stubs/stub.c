@@ -8,7 +8,7 @@
 #include "stub.h"
 #include "lib.h"
 #include "UnitExample.h"
-TEST_STUB_TYPE TEST_STUB;
+TEST_STUB_TYPE TEST_STUB = {0};
 void fooA()
 {
   TEST_STUB.fooA.callcount++;

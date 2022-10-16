@@ -43,11 +43,13 @@ int main(int argc, char *argv[])
                 RunAllTests_ScreenAndFile();
             }
             else
-            {
-                printf("\x1b[1;31mRun Mode incorrect. Please specify a correct runmode.\x1b[0m\n\
+            {   
+                SetForegroundColour(FG_BRIGHTRED);
+                printf("Run Mode incorrect. Please specify a correct runmode.\n\
                                 1. Log to screen:\t\t-s\n\
                                 3. Log to file:\t\t-f\n\
                                 4. Log to file and screen:\t-fs\n");
+                ResetColour();
             }
             argi++;
         }

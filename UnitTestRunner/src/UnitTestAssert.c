@@ -10,15 +10,37 @@
  */
 
 #include "UnitTestAssert.h"
+#include <stdarg.h>
 
-// Global variables
+/**
+ * @brief 
+ * 
+ */
 AssertMode_Type AssertMode = PRINT_FAILED_ASSERT;
-ColourMode_Type ColourMode = NO_COLOUR;
-LogMode_Type LogMode = LOG_SCREEN;
-#if defined(__WIN64__) || defined(__WIN32__)
-FILE *LogFile;
-#endif
 
+/**
+ * @brief 
+ * 
+ */
+ColourMode_Type ColourMode = NO_COLOUR;
+
+/**
+ * @brief 
+ * 
+ */
+LogMode_Type LogMode = LOG_SCREEN;
+
+/**
+ * @brief 
+ * 
+ */
+FILE *LogFile;
+
+/**
+ * @brief Set a modifier for printed text
+ * 
+ * @param modifier See ModifierCode enum for options
+ */
 void SetModifier(ModifierCode modifier)
 {
     if (ColourMode == COLOUR)
@@ -27,6 +49,11 @@ void SetModifier(ModifierCode modifier)
     }
 }
 
+/**
+ * @brief Set the foreground colour of printed text
+ * 
+ * @param colour See ForegroundColourCode enum for options
+ */
 void SetForegroundColour(ForegroundColourCode colour)
 {
     if (ColourMode == COLOUR)
@@ -34,6 +61,12 @@ void SetForegroundColour(ForegroundColourCode colour)
         printf("\x1b[%dm", colour);
     }
 }
+
+/**
+ * @brief Set the background colour of printed text
+ * 
+ * @param colour See BackgroundColourCode enum for options
+ */
 void SetBackgroundColour(BackgroundColourCode colour)
 {
     if (ColourMode == COLOUR)
@@ -42,6 +75,10 @@ void SetBackgroundColour(BackgroundColourCode colour)
     }
 }
 
+/**
+ * @brief Reset the options for the printed text
+ * 
+ */
 void ResetColour(void)
 {
     if (ColourMode == COLOUR)
@@ -50,6 +87,15 @@ void ResetColour(void)
     }
 }
 
+/**
+ * @brief Implementation of printing assert based on settings by the user
+ * 
+ * @param condition evaluated condition
+ * @param format format for the printed text
+ * @param file In which file the assert was called
+ * @param line In which line the assert was called
+ * @param message Printed message after the assert
+ */
 void AssertPrint(boolean condition, char *format, char *file, int line, char *message)
 {
     if (FALSE == condition || PRINT_EVERY_ASSERT == AssertMode)
@@ -72,7 +118,6 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
                     ResetColour();
                 }
                 break;
-#if defined(__WIN64__) || defined(__WIN32__)
             case LOG_FILE:
                 fprintf(LogFile, format, file, line, message);
                 break;
@@ -94,14 +139,32 @@ void AssertPrint(boolean condition, char *format, char *file, int line, char *me
                 }
                 fprintf(LogFile, format, file, line, message);
                 break;
-#endif
             default:
                 break;
         }
     }
 }
 
-void AssertImplementation(boolean condition, char *message, char *file, int line)
+/**
+ * @brief 
+ * 
+ * @param condition Condition to be evaluated
+ * @param format Format for the printed text
+ * @param file File in which the assert was called
+ * @param line Line in which the assert was called
+ * @param argc Number of arguments to be printed
+ * @param ... arguments to be printed
+ */
+void AssertImplementationWithFormat(boolean condition, char *format, char *file, int line,int argc, ...)
 {
+    /* Init variable args */
+    va_list args;
+    va_start(args, argc);
+    char message[1024u];
+    /* Print them into char array */
+    vsnprintf(message,1024u,format, args);
+    /* Call AssertPrint implementation for actually printing */
     AssertPrint(condition, "%s:%d: %s\n", file, line, message);
+    /* End variable args */
+    va_end(args);
 }

@@ -12,6 +12,7 @@
 #include "TestSuites.h"
 #include "UnitTestAssert.h"
 #include "stub.h"
+#include "stdint.h"
 
 static int fooC_userstub(int a, int b){
     return a + 2 * b;
@@ -25,20 +26,27 @@ void TS1_TestCase1(void)
 {
     int a = 1;
     int b = 2;
-    int expected = 3;
+    int expectedResult = 15;
     TEST_STUB.fooC.stub_option = STUB_OPTION_REDIRECT;
     TEST_STUB.fooC.redirectFuncPtr = fooC_userstub;
-    int actual = TEST_CALL_UnitExample(a,b);
-    ASSERT_EQUAL(TEST_STUB.UnitExample.callcount, 1);
-    ASSERT_EQUAL(actual, expected);
+    int result = TEST_CALL_UnitExample(a,b);
+    ASSERT_HEX8_EQUAL(TEST_STUB.UnitExample.callcount, 1u);
+    ASSERT_HEX8_EQUAL(expectedResult, result);
 }
+
 /**
  * @brief 
  * 
  */
 void TS1_TestCase2(void)
 {
-    
+    float a = 1.0f;
+    float b = 2.0f;
+
+    float expectedResult = 3.0f;
+    float tolerance = 0.0001f;
+
+    ASSERT_FLOAT(a+b,expectedResult,tolerance);   
 }
 
 /**

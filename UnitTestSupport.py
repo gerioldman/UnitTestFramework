@@ -574,7 +574,12 @@ def makeStubSource(ast, header_list):
                                                                     quals=[],
                                                                     type=c_ast.IdentifierType(names=['TEST_STUB_TYPE']),
                                                                     coord=None),
-                                            init=None,
+                                            init=c_ast.InitList(
+                                                exprs=[
+                                                    c_ast.Constant(type='int', value='0')
+                                                ],
+                                                coord=None
+                                            ),
                                             bitsize=None,
                                             coord=None))
     for entity in funcDeclList:
